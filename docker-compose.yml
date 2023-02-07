@@ -1,0 +1,11 @@
+services:
+  database:
+    image: 'postgres:alpine'
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=dio
+      - POSTGRES_PASSWORD=583614
+      - APP_DB_USER=dio
+      - APP_DB_PASS=583614
+      - APP_DB_NAME=dropkit
