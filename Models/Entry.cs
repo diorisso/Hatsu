@@ -11,6 +11,6 @@ public class Entry : Entity<int>
     public Game Game { get; set; } = null!;
 
     public EntryStatus Status { get; set; } = EntryStatus.Backlog;
-    public float? Rating { get; set; }
+    public byte? Rating { get; set; }
     public string? Notes { get; set; }
 }

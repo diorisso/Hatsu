@@ -10,7 +10,8 @@ public class CreateEntryRequest
 
     public EntryStatus Status { get; set; } = EntryStatus.Backlog;
 
-    public float? Rating { get; set; }
+    [Range(1, 10)]
+    public byte? Rating { get; set; }
 
     public string? Notes { get; set; }
 }
