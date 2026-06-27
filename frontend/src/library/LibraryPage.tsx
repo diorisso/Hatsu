@@ -21,14 +21,13 @@ type LoadState =
   | { status: 'error'; message: string }
   | { status: 'ready'; items: LibraryItem[] }
 
-type SortKey = 'added' | 'title' | 'rating' | 'status'
+type SortKey = 'added' | 'title' | 'rating'
 type ViewMode = 'list' | 'cards' | 'compact'
 
 const SORT_OPTIONS: { key: SortKey; label: string }[] = [
   { key: 'added', label: 'Recently added' },
   { key: 'title', label: 'Title (A–Z)' },
   { key: 'rating', label: 'Highest rated' },
-  { key: 'status', label: 'Status' },
 ]
 
 const STATUS_GROUPS = [...STATUS_OPTIONS].sort(
@@ -97,13 +96,6 @@ function sortItems(items: LibraryItem[], sort: SortKey): LibraryItem[] {
       sorted.sort(
         (a, b) =>
           (b.entry.rating ?? -1) - (a.entry.rating ?? -1) || titleOf(a).localeCompare(titleOf(b)),
-      )
-      break
-    case 'status':
-      sorted.sort(
-        (a, b) =>
-          STATUS_SORT_ORDER[a.entry.status] - STATUS_SORT_ORDER[b.entry.status] ||
-          titleOf(a).localeCompare(titleOf(b)),
       )
       break
     case 'added':

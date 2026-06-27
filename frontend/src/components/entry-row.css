@@ -17,9 +17,9 @@
 }
 
 .lib-row:hover {
-  border-color: var(--field-border);
+  border-color: var(--status-color);
   transform: translateY(-1px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 0 16px -3px color-mix(in srgb, var(--status-color) 50%, transparent);
 }
 
 .lib-row__cover {
@@ -30,8 +30,6 @@
   border-radius: 7px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--accent), #171a21 92%);
-  border: 1px solid var(--status-color);
-  box-shadow: 0 0 9px -1px color-mix(in srgb, var(--status-color) 55%, transparent);
 }
 
 .lib-row__cover img {
