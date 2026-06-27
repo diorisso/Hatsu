@@ -1,0 +1,22 @@
+.rating-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.rating-mini__star {
+  flex-shrink: 0;
+  fill: var(--status-color);
+}
+
+.rating-mini[data-rated='false'] .rating-mini__star {
+  fill: var(--text-faint);
+}
+
+.rating-mini__value {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}

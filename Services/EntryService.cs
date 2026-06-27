@@ -50,14 +50,14 @@ public class EntryService : Service<Entry, int>, IEntryService
         if (xEntry == null || xEntry.UserId != pUserId)
             throw new KeyNotFoundException("Entry not found.");
 
-        if (pRequest.Status.HasValue)
-            xEntry.Status = pRequest.Status.Value;
+        if (pRequest.Status.IsSpecified && pRequest.Status.Value.HasValue)
+            xEntry.Status = pRequest.Status.Value.Value;
 
-        if (pRequest.Rating.HasValue)
-            xEntry.Rating = pRequest.Rating;
+        if (pRequest.Rating.IsSpecified)
+            xEntry.Rating = pRequest.Rating.Value;
 
-        if (pRequest.Notes != null)
-            xEntry.Notes = pRequest.Notes;
+        if (pRequest.Notes.IsSpecified)
+            xEntry.Notes = pRequest.Notes.Value;
 
         var xReturn = await base.UpdateAsync(xEntry);
         return xReturn;

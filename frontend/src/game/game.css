@@ -1,0 +1,242 @@
+.game__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 44px);
+  align-items: start;
+}
+
+.game__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.game__cover {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), #171a21 92%);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.game__cover[data-tracked] {
+  border-color: var(--status-color);
+  box-shadow: 0 0 22px -5px color-mix(in srgb, var(--status-color) 50%, transparent);
+}
+
+.game__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.game__noart {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 55%, rgba(254, 255, 254, 0.14));
+}
+
+.game__cover--loading {
+  background: var(--surface);
+}
+
+.game__cover--loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--text) 9%, transparent) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  animation: cover-sweep 1.5s var(--ease) infinite;
+}
+
+@keyframes cover-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.game__intro {
+  min-width: 0;
+}
+
+.game__title {
+  margin: 8px 0 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.game__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 0 0 18px;
+}
+
+.game__fact dt {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+}
+
+.game__fact dd {
+  margin: 3px 0 0;
+  font-size: 0.94rem;
+  color: var(--text);
+}
+
+.game__platforms {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 26px;
+  padding: 0;
+}
+
+.game__platforms li {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  background: var(--seg-track);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+/* ---- Track panel ---- */
+.track {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.track__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.track__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.track__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.track__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track__field span {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.track__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.track__actions .btn {
+  margin-top: 0;
+}
+
+.track__notice {
+  margin: 12px 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.game__summary {
+  max-width: 65ch;
+  margin: 4px 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.game__back {
+  margin-top: 18px;
+}
+
+.game__back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  padding: 6px 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.game__back-btn:hover {
+  color: var(--text);
+}
+
+.game__back-btn svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.game__back-btn:hover svg {
+  transform: translateX(-3px);
+}
+
+/* loading placeholders */
+.game__bar {
+  height: 20px;
+  border-radius: 7px;
+  margin-bottom: 14px;
+  background: var(--seg-track);
+  animation: bar-pulse 1.5s var(--ease) infinite;
+}
+
+@keyframes bar-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 720px) {
+  .game__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .game__cover {
+    max-width: 220px;
+  }
+}

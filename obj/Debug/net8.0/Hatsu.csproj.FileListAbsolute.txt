@@ -132,3 +132,8 @@
 /home/dio/Projetos/Hatsu/bin/Debug/net8.0/Refit.dll
 /home/dio/Projetos/Hatsu/bin/Debug/net8.0/Refit.HttpClientFactory.dll
 /home/dio/Projetos/Hatsu/obj/Debug/net8.0/Hatsu.sourcelink.json
+/home/dio/Projetos/Hatsu/bin/Debug/net8.0/frontend/.oxlintrc.json
+/home/dio/Projetos/Hatsu/bin/Debug/net8.0/frontend/package.json
+/home/dio/Projetos/Hatsu/bin/Debug/net8.0/frontend/tsconfig.app.json
+/home/dio/Projetos/Hatsu/bin/Debug/net8.0/frontend/tsconfig.json
+/home/dio/Projetos/Hatsu/bin/Debug/net8.0/frontend/tsconfig.node.json
