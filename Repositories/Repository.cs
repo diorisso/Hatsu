@@ -21,7 +21,7 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey> whe
         return xReturn;
     }
 
-    public async Task<TEntity?> GetByIdAsync(TKey pId)
+    public virtual async Task<TEntity?> GetByIdAsync(TKey pId)
     {
         var xReturn = await _dbSet
             .Where(p => !p.IsExcluded)

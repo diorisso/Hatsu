@@ -2,8 +2,7 @@ namespace Hatsu.Dtos;
 
 public class GameResponse
 {
-    public int Id { get; set; }
-    public int IgdbId { get; set; }
+    public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Summary { get; set; }
     public string? CoverUrl { get; set; }

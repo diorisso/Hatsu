@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Hatsu")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c7f6898a13853b0bc85fa05f33437fdbcb685fa")]
 [assembly: System.Reflection.AssemblyProductAttribute("Hatsu")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Hatsu")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

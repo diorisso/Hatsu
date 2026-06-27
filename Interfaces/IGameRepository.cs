@@ -2,7 +2,6 @@ using Hatsu.Models;
 
 namespace Hatsu.Interfaces;
 
-public interface IGameRepository : IRepository<Game, int>
+public interface IGameRepository : IRepository<Game, long>
 {
-    Task<Game?> GetByIgdbIdAsync(int pIgdbId);
 }

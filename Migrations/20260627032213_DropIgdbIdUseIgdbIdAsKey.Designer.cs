@@ -3,6 +3,7 @@ using System;
 using Hatsu.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hatsu.Migrations
 {
     [DbContext(typeof(HatsuDbContext))]
-    partial class HatsuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627032213_DropIgdbIdUseIgdbIdAsKey")]
+    partial class DropIgdbIdUseIgdbIdAsKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,8 +27,8 @@ namespace Hatsu.Migrations
 
             modelBuilder.Entity("GamePlatform", b =>
                 {
-                    b.Property<long>("GameId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("PlatformsId")
                         .HasColumnType("integer");
@@ -71,8 +74,8 @@ namespace Hatsu.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("GameId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsExcluded")
                         .HasColumnType("boolean");
@@ -104,8 +107,8 @@ namespace Hatsu.Migrations
 
             modelBuilder.Entity("Hatsu.Models.Game", b =>
                 {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CachedAt")
                         .HasColumnType("timestamp with time zone");

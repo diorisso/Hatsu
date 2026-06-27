@@ -131,3 +131,4 @@
 /home/dio/Projetos/Hatsu/bin/Debug/net8.0/Microsoft.Extensions.Http.dll
 /home/dio/Projetos/Hatsu/bin/Debug/net8.0/Refit.dll
 /home/dio/Projetos/Hatsu/bin/Debug/net8.0/Refit.HttpClientFactory.dll
+/home/dio/Projetos/Hatsu/obj/Debug/net8.0/Hatsu.sourcelink.json

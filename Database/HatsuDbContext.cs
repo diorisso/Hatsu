@@ -53,13 +53,13 @@ public class HatsuDbContext : DbContext
             .HasIndex(u => u.Email).IsUnique();
 
         pModelBuilder.Entity<Game>()
-            .HasIndex(g => g.IgdbId).IsUnique();
+            .Property(g => g.Id).ValueGeneratedNever();
 
         pModelBuilder.Entity<Company>()
-            .HasIndex(c => c.IgdbId).IsUnique();
+            .Property(c => c.Id).ValueGeneratedNever();
 
         pModelBuilder.Entity<Platform>()
-            .HasIndex(p => p.IgdbId).IsUnique();
+            .Property(p => p.Id).ValueGeneratedNever();
 
         pModelBuilder.Entity<Game>()
             .HasMany(g => g.Platforms)

@@ -34,8 +34,8 @@ public class GamesController : ControllerBase
         }
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetById(long id)
     {
         var xGame = await _gameService.GetByIdAsync(id);
         if (xGame == null)

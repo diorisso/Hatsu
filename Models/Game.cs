@@ -1,8 +1,7 @@
 namespace Hatsu.Models;
 
-public class Game : Entity<int>
+public class Game : Entity<long>
 {
-    public int IgdbId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? CoverUrl { get; set; }
     public string? Summary { get; set; }

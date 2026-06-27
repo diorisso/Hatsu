@@ -68,7 +68,6 @@ public class IgdbService : IIgdbService
         var xReturn = new GameResponse
         {
             Id = pGame.Id,
-            IgdbId = pGame.IgdbId,
             Name = pGame.Name,
             Summary = pGame.Summary,
             CoverUrl = pGame.CoverUrl,
@@ -88,9 +87,9 @@ public class IgdbService : IIgdbService
 
     private async Task<Game> ToGameAsync(IgdbGame pIgdbGame)
     {
-        var xIgdbId = (int)pIgdbGame.Id;
+        var xIgdbId = pIgdbGame.Id;
 
-        var xExisting = await _gameRepository.GetByIgdbIdAsync(xIgdbId);
+        var xExisting = await _gameRepository.GetByIdAsync(xIgdbId);
         if (xExisting != null)
             return xExisting;
 
@@ -100,7 +99,7 @@ public class IgdbService : IIgdbService
 
         var xGame = new Game
         {
-            IgdbId = xIgdbId,
+            Id = xIgdbId,
             Name = pIgdbGame.Name,
             Summary = pIgdbGame.Summary,
             CoverUrl = pIgdbGame.Cover?.Url,
@@ -128,13 +127,13 @@ public class IgdbService : IIgdbService
 
         var xIgdbId = (int)pInvolved.Company.Id;
 
-        var xExisting = await _companyRepository.GetByIgdbIdAsync(xIgdbId);
+        var xExisting = await _companyRepository.GetByIdAsync(xIgdbId);
         if (xExisting != null)
             return xExisting;
 
         var xCompany = new Company
         {
-            IgdbId = xIgdbId,
+            Id = xIgdbId,
             Name = pInvolved.Company.Name
         };
 
@@ -155,14 +154,14 @@ public class IgdbService : IIgdbService
         {
             var xIgdbId = (int)xIgdbPlatform.Id;
 
-            var xExisting = await _platformRepository.GetByIgdbIdAsync(xIgdbId);
+            var xExisting = await _platformRepository.GetByIdAsync(xIgdbId);
             if (xExisting != null)
             {
                 xReturn.Add(xExisting);
                 continue;
             }
 
-            var xPlatform = new Platform { IgdbId = xIgdbId, Name = xIgdbPlatform.Name };
+            var xPlatform = new Platform { Id = xIgdbId, Name = xIgdbPlatform.Name };
             await _platformRepository.AddAsync(xPlatform);
             await _platformRepository.SaveAsync();
             xReturn.Add(xPlatform);
