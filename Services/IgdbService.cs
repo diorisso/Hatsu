@@ -11,7 +11,7 @@ namespace Hatsu.Services;
 public class IgdbService : IIgdbService
 {
     private const int _PAGE_MAX = 100;
-    private const string _FIELDS = "fields id,name,summary,first_release_date,total_rating_count,cover.url," +
+    private const string _FIELDS = "fields id,game_type,name,summary,first_release_date,total_rating_count,cover.url," +
         "involved_companies.company.name,involved_companies.developer,involved_companies.publisher,platforms.name;";
 
     private readonly IIgdbApi _igdbApi;
@@ -44,6 +44,19 @@ public class IgdbService : IIgdbService
         return xReturn;
     }
 
+    public async Task<Game?> GetGameByIdAsync(long pId)
+    {
+        var xQuery = $"{_FIELDS} where id = {pId};";
+        var xIgdbGames = await _igdbApi.QueryGamesAsync(xQuery);
+
+        var xIgdbGame = xIgdbGames.FirstOrDefault();
+        if (xIgdbGame == null)
+            return null;
+
+        var xReturn = await ToGameAsync(xIgdbGame);
+        return xReturn;
+    }
+
     private static string ToSlug(string pValue)
     {
         var xNormalized = pValue.Normalize(NormalizationForm.FormD);
@@ -68,6 +81,7 @@ public class IgdbService : IIgdbService
         var xReturn = new GameResponse
         {
             Id = pGame.Id,
+            Type = pGame.Type,
             Name = pGame.Name,
             Summary = pGame.Summary,
             CoverUrl = pGame.CoverUrl,
@@ -100,6 +114,7 @@ public class IgdbService : IIgdbService
         var xGame = new Game
         {
             Id = xIgdbId,
+            Type = (GameType)(pIgdbGame.GameType ?? 0),
             Name = pIgdbGame.Name,
             Summary = pIgdbGame.Summary,
             CoverUrl = pIgdbGame.Cover?.Url,

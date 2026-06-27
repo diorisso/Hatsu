@@ -10,6 +10,9 @@ public class IgdbGame
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
+    [JsonPropertyName("game_type")]
+    public int? GameType { get; set; }
+
     [JsonPropertyName("summary")]
     public string? Summary { get; set; }
 

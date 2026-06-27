@@ -37,10 +37,18 @@ public class GamesController : ControllerBase
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById(long id)
     {
-        var xGame = await _gameService.GetByIdAsync(id);
-        if (xGame == null)
-            return NotFound();
+        try
+        {
+            var xGame = await _gameService.GetByIdAsync(id);
+            if (xGame == null)
+                return NotFound();
 
-        return Ok(xGame);
+            return Ok(xGame);
+        }
+        catch (ApiException xEx)
+        {
+            _logger.LogError(xEx, "Failed to fetch game {GameId} from IGDB", id);
+            return StatusCode((int)xEx.StatusCode, new { message = "Error querying IGDB." });
+        }
     }
 }

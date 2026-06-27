@@ -1,8 +1,11 @@
+using Hatsu.Models;
+
 namespace Hatsu.Dtos;
 
 public class GameResponse
 {
     public long Id { get; set; }
+    public GameType Type { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Summary { get; set; }
     public string? CoverUrl { get; set; }

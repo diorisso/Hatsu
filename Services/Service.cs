@@ -17,7 +17,7 @@ public abstract class Service<TEntity, TKey> : IService<TEntity, TKey> where TEn
         return xReturn;
     }
 
-    public async Task<TEntity?> GetByIdAsync(TKey pId)
+    public virtual async Task<TEntity?> GetByIdAsync(TKey pId)
     {
         var xReturn = await _repository.GetByIdAsync(pId);
         return xReturn;

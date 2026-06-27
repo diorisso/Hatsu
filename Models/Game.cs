@@ -2,6 +2,7 @@ namespace Hatsu.Models;
 
 public class Game : Entity<long>
 {
+    public GameType Type { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? CoverUrl { get; set; }
     public string? Summary { get; set; }
