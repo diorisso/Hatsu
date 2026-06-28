@@ -50,6 +50,19 @@ bun run dev                 # http://localhost:5173
 The dev server proxies `/api` to the backend, so just open <http://localhost:5173>,
 register an account, and start tracking.
 
+## Deploy with Docker
+
+Runs the API and PostgreSQL together. Copy `.env.example` to `.env` and fill in
+`JWT_KEY`, `IGDB_CLIENT_ID`, and `IGDB_CLIENT_SECRET`, then:
+
+```bash
+docker compose up -d --build
+```
+
+The API is available on <http://localhost:8080>. Database migrations are applied
+automatically on startup. Put it behind a reverse proxy (nginx, Caddy, Traefik) for
+TLS in production.
+
 ## Project structure
 
 ```

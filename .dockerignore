@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+frontend/
+.git/
+.gitignore
+.idea/
+.vs/
+.config/
+.env
+.env.example
+Dockerfile
+docker-compose.yml
+*.md

@@ -3,3 +3,6 @@ bin
 .config
 .git
 .idea
+.env
+
+deploy.sh

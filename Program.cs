@@ -82,9 +82,28 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+var xCorsOrigins = (builder.Configuration["Cors:AllowedOrigins"] ?? string.Empty)
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(xCorsOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
+using (var xScope = app.Services.CreateScope())
+{
+    var xContext = xScope.ServiceProvider.GetRequiredService<HatsuDbContext>();
+    xContext.Database.Migrate();
+}
+
 app.UseSerilogRequestLogging();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
