@@ -65,6 +65,11 @@ export interface AuthResponse {
   expiresAt: string
 }
 
+export interface RegisterResponse {
+  email: string
+  message: string
+}
+
 export interface RegisterRequest {
   username: string
   email: string

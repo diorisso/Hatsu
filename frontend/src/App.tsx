@@ -2,6 +2,7 @@ import type { ReactElement } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './components/AppLayout'
 import { AuthPage } from './auth/AuthPage'
+import { VerifyPage } from './auth/VerifyPage'
 import { LibraryPage } from './library/LibraryPage'
 import { SearchPage } from './search/SearchPage'
 import { GamePage } from './game/GamePage'
@@ -21,6 +22,7 @@ export default function App() {
         path="/login"
         element={isAuthenticated ? <Navigate to="/" replace /> : <AuthPage />}
       />
+      <Route path="/verify" element={<VerifyPage />} />
       <Route
         element={
           <RequireAuth>

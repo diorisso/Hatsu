@@ -10,10 +10,6 @@
   fill: var(--status-color);
 }
 
-.rating-mini[data-rated='false'] .rating-mini__star {
-  fill: var(--text-faint);
-}
-
 .rating-mini__value {
   font-family: var(--font-mono);
   font-size: 0.74rem;

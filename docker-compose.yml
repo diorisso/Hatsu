@@ -30,6 +30,10 @@ services:
       Jwt__Audience: ${JWT_AUDIENCE:-HatsuClient}
       Igdb__ClientId: ${IGDB_CLIENT_ID:?set IGDB_CLIENT_ID in .env}
       Igdb__ClientSecret: ${IGDB_CLIENT_SECRET:?set IGDB_CLIENT_SECRET in .env}
+      Email__ApiKey: ${RESEND_API_KEY:?set RESEND_API_KEY in .env}
+      Email__FromAddress: ${EMAIL_FROM:-no-reply@send.hatsuapp.com}
+      Email__FromName: ${EMAIL_FROM_NAME:-Hatsu}
+      Email__VerificationUrl: ${EMAIL_VERIFICATION_URL:-https://hatsuapp.com/verify}
     ports:
       - "8080:8080"
     restart: unless-stopped

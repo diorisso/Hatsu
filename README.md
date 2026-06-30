@@ -18,10 +18,11 @@ library, and track each one's status (Now Playing, Completed, Backlog, Dropped) 
 ### 1. Database
 
 ```bash
-docker compose up -d
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-Starts PostgreSQL on `localhost:5432` (matches the default connection string).
+Starts only PostgreSQL on `localhost:5432` with password `postgres` (matches the
+default connection string), so you can run the API locally with `dotnet run`.
 
 ### 2. Configuration
 

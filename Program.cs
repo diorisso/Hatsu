@@ -1,5 +1,6 @@
 using System.Text;
 using Hatsu.Database;
+using Hatsu.Integrations.Email;
 using Hatsu.Integrations.Igdb;
 using Hatsu.Interfaces;
 using Hatsu.Repositories;
@@ -45,6 +46,14 @@ builder.Services.AddScoped<IPlatformService, PlatformService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.AddTransient<ResendAuthHandler>();
+builder.Services
+    .AddRefitClient<IResendApi>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.resend.com"))
+    .AddHttpMessageHandler<ResendAuthHandler>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.Configure<IgdbSettings>(builder.Configuration.GetSection("Igdb"));
 builder.Services.AddSingleton<IgdbTokenProvider>();

@@ -1,0 +1,128 @@
+.search-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton--row {
+  aspect-ratio: auto;
+  height: 74px;
+  border-radius: 12px;
+}
+
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px 8px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.game-row:hover {
+  border-color: var(--field-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.game-row__main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.game-row__cover {
+  position: relative;
+  width: 42px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), #171a21 92%);
+}
+
+.game-row__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.game-row__noart {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 55%, rgba(254, 255, 254, 0.14));
+}
+
+.game-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.game-row__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.96rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-row__meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-row__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, transform 0.15s var(--ease);
+}
+
+.game-row__add:hover {
+  color: #fff;
+  background: var(--accent);
+}
+
+.game-row__add:active {
+  transform: scale(0.92);
+}
+
+.game-row__add:disabled {
+  color: var(--text-muted);
+  background: transparent;
+  border-color: var(--border);
+  cursor: default;
+  transform: none;
+}
+
+.game-row__add[data-in-library] {
+  color: var(--status-color);
+  background: color-mix(in srgb, var(--status-color) 14%, transparent);
+  border-color: transparent;
+}
+
+.game-row__status-icon {
+  width: 18px;
+  height: 18px;
+}

@@ -23,4 +23,10 @@ public class UserService : Service<User, int>, IUserService
         var xReturn = await _userRepository.GetByEmailAsync(pEmail);
         return xReturn;
     }
+
+    public async Task<User?> GetByEmailVerificationTokenAsync(string pToken)
+    {
+        var xReturn = await _userRepository.GetByEmailVerificationTokenAsync(pToken);
+        return xReturn;
+    }
 }

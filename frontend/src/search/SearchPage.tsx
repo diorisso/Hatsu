@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
-import type { GameResponse } from '../api/types'
-import { GameCard } from '../components/GameCard'
+import type { EntryStatus, GameResponse } from '../api/types'
+import { GameRow } from '../components/GameRow'
+import { QuickAddModal } from '../components/QuickAddModal'
 
 type SearchState =
   | { status: 'idle' }
@@ -14,6 +15,23 @@ export function SearchPage() {
   const [params] = useSearchParams()
   const query = params.get('q')?.trim() ?? ''
   const [state, setState] = useState<SearchState>({ status: 'idle' })
+  const [addTarget, setAddTarget] = useState<GameResponse | null>(null)
+  const [libraryStatus, setLibraryStatus] = useState<Map<number, EntryStatus>>(() => new Map())
+
+  useEffect(() => {
+    let active = true
+
+    api.entries
+      .mine()
+      .then((entries) => {
+        if (active) setLibraryStatus(new Map(entries.map((entry) => [entry.gameId, entry.status])))
+      })
+      .catch(() => {})
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   useEffect(() => {
     if (!query) {
@@ -55,9 +73,9 @@ export function SearchPage() {
       )}
 
       {state.status === 'loading' && (
-        <div className="card-grid">
+        <div className="search-list">
           {Array.from({ length: 8 }, (_, index) => (
-            <div key={index} className="skeleton" />
+            <div key={index} className="skeleton skeleton--row" />
           ))}
         </div>
       )}
@@ -73,11 +91,27 @@ export function SearchPage() {
       )}
 
       {state.status === 'ready' && state.games.length > 0 && (
-        <div className="card-grid">
+        <div className="search-list">
           {state.games.map((game) => (
-            <GameCard key={game.id} game={game} />
+            <GameRow
+              key={game.id}
+              game={game}
+              status={libraryStatus.get(game.id) ?? null}
+              onAdd={setAddTarget}
+            />
           ))}
         </div>
+      )}
+
+      {addTarget && (
+        <QuickAddModal
+          game={addTarget}
+          onClose={() => setAddTarget(null)}
+          onAdded={(entry) => {
+            setLibraryStatus((prev) => new Map(prev).set(entry.gameId, entry.status))
+            setAddTarget(null)
+          }}
+        />
       )}
     </section>
   )

@@ -24,4 +24,12 @@ public class UserRepository : Repository<User, int>, IUserRepository
             .FirstOrDefaultAsync(p => p.Email == pEmail);
         return xReturn;
     }
+
+    public async Task<User?> GetByEmailVerificationTokenAsync(string pToken)
+    {
+        var xReturn = await _dbSet
+            .Where(p => !p.IsExcluded)
+            .FirstOrDefaultAsync(p => p.EmailVerificationToken == pToken);
+        return xReturn;
+    }
 }

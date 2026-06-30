@@ -5,10 +5,12 @@ import type {
   GameResponse,
   LoginRequest,
   RegisterRequest,
+  RegisterResponse,
   UpdateEntryRequest,
 } from './types'
 
 const TOKEN_KEY = 'hatsu.token'
+const API_BASE = import.meta.env.VITE_API_URL ?? ''
 
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
@@ -34,7 +36,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (init?.body) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
-  const response = await fetch(`/api${path}`, { ...init, headers })
+  const response = await fetch(`${API_BASE}/api${path}`, { ...init, headers })
 
   if (!response.ok) {
     let message = response.statusText
@@ -54,9 +56,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   auth: {
     register: (body: RegisterRequest) =>
-      request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
+      request<RegisterResponse>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
     login: (body: LoginRequest) =>
       request<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+    verify: (token: string) =>
+      request<AuthResponse>(`/auth/verify?token=${encodeURIComponent(token)}`),
+    resend: (email: string) =>
+      request<{ message: string }>('/auth/resend', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      }),
   },
   games: {
     search: (query: string, limit = 10) =>

@@ -1,4 +1,5 @@
 using Hatsu.Dtos;
+using Hatsu.Exceptions;
 using Hatsu.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,10 +41,37 @@ public class AuthController : ControllerBase
             var xReturn = await _authService.LoginAsync(pRequest);
             return Ok(xReturn);
         }
+        catch (EmailNotVerifiedException xEx)
+        {
+            _logger.LogWarning(xEx, "Login blocked for unverified email {Email}", pRequest.Email);
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = xEx.Message, emailNotVerified = true });
+        }
         catch (InvalidOperationException xEx)
         {
             _logger.LogWarning(xEx, "Failed to authenticate user with email {Email}", pRequest.Email);
             return Unauthorized(new { message = xEx.Message });
         }
+    }
+
+    [HttpGet("verify")]
+    public async Task<IActionResult> Verify([FromQuery(Name = "token")] string pToken)
+    {
+        try
+        {
+            var xReturn = await _authService.VerifyEmailAsync(pToken);
+            return Ok(xReturn);
+        }
+        catch (InvalidOperationException xEx)
+        {
+            _logger.LogWarning(xEx, "Failed to verify email with token");
+            return BadRequest(new { message = xEx.Message });
+        }
+    }
+
+    [HttpPost("resend")]
+    public async Task<IActionResult> Resend(ResendVerificationRequest pRequest)
+    {
+        await _authService.ResendVerificationAsync(pRequest);
+        return Ok(new { message = "If that account exists and isn't verified, a new link is on its way." });
     }
 }
