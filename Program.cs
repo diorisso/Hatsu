@@ -1,4 +1,6 @@
 using System.Text;
+using Amazon.Runtime;
+using Amazon.S3;
 using Hatsu.Database;
 using Hatsu.Integrations.Email;
 using Hatsu.Integrations.Igdb;
@@ -8,6 +10,7 @@ using Hatsu.Services;
 using Hatsu.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using Refit;
@@ -37,12 +40,14 @@ builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IEntryRepository, EntryRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IPlatformService, PlatformService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -54,6 +59,22 @@ builder.Services
     .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://api.resend.com"))
     .AddHttpMessageHandler<ResendAuthHandler>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+builder.Services.Configure<StorageSettings>(builder.Configuration.GetSection("Storage"));
+builder.Services.AddSingleton<IAmazonS3>(pProvider =>
+{
+    var xSettings = pProvider.GetRequiredService<IOptions<StorageSettings>>().Value;
+    var xConfig = new AmazonS3Config
+    {
+        ServiceURL = $"https://{xSettings.AccountId}.r2.cloudflarestorage.com",
+        ForcePathStyle = true,
+        RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
+        ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED
+    };
+    var xCredentials = new BasicAWSCredentials(xSettings.AccessKeyId, xSettings.SecretAccessKey);
+    return new AmazonS3Client(xCredentials, xConfig);
+});
+builder.Services.AddScoped<IStorageService, R2StorageService>();
 
 builder.Services.Configure<IgdbSettings>(builder.Configuration.GetSection("Igdb"));
 builder.Services.AddSingleton<IgdbTokenProvider>();

@@ -240,6 +240,14 @@ export function GamePage() {
             )}
           </dl>
 
+          {game.genres.length > 0 && (
+            <ul className="game__platforms">
+              {game.genres.map((genre) => (
+                <li key={genre.id}>{genre.name}</li>
+              ))}
+            </ul>
+          )}
+
           {game.platforms.length > 0 && (
             <ul className="game__platforms">
               {game.platforms.map((platform) => (

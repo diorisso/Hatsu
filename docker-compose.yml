@@ -34,6 +34,11 @@ services:
       Email__FromAddress: ${EMAIL_FROM:-no-reply@send.hatsuapp.com}
       Email__FromName: ${EMAIL_FROM_NAME:-Hatsu}
       Email__VerificationUrl: ${EMAIL_VERIFICATION_URL:-https://hatsuapp.com/verify}
+      Storage__AccountId: ${R2_ACCOUNT_ID:?set R2_ACCOUNT_ID in .env}
+      Storage__AccessKeyId: ${R2_ACCESS_KEY_ID:?set R2_ACCESS_KEY_ID in .env}
+      Storage__SecretAccessKey: ${R2_SECRET_ACCESS_KEY:?set R2_SECRET_ACCESS_KEY in .env}
+      Storage__BucketName: ${R2_BUCKET:-hatsu-avatars}
+      Storage__PublicBaseUrl: ${R2_PUBLIC_URL:?set R2_PUBLIC_URL in .env}
     ports:
       - "8080:8080"
     restart: unless-stopped

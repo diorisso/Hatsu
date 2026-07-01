@@ -37,6 +37,11 @@ export interface PlatformSummary {
   name: string
 }
 
+export interface GenreSummary {
+  id: number
+  name: string
+}
+
 export interface GameResponse {
   id: number
   type: GameType
@@ -47,6 +52,7 @@ export interface GameResponse {
   developer: CompanySummary | null
   publisher: CompanySummary | null
   platforms: PlatformSummary[]
+  genres: GenreSummary[]
 }
 
 export interface EntryResponse {
@@ -68,6 +74,13 @@ export interface AuthResponse {
 export interface RegisterResponse {
   email: string
   message: string
+}
+
+export interface UserResponse {
+  id: number
+  username: string
+  email: string
+  avatarUrl: string | null
 }
 
 export interface RegisterRequest {

@@ -3,6 +3,7 @@ using System;
 using Hatsu.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hatsu.Migrations
 {
     [DbContext(typeof(HatsuDbContext))]
-    partial class HatsuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260630232057_AddUserAvatar")]
+    partial class AddUserAvatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace Hatsu.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("GameGenre", b =>
-                {
-                    b.Property<long>("GameId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("GenresId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("GameId", "GenresId");
-
-                    b.HasIndex("GenresId");
-
-                    b.ToTable("GameGenre");
-                });
 
             modelBuilder.Entity("GamePlatform", b =>
                 {
@@ -165,29 +153,6 @@ namespace Hatsu.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Hatsu.Models.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsExcluded")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genres");
-                });
-
             modelBuilder.Entity("Hatsu.Models.Platform", b =>
                 {
                     b.Property<int>("Id")
@@ -261,21 +226,6 @@ namespace Hatsu.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("GameGenre", b =>
-                {
-                    b.HasOne("Hatsu.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hatsu.Models.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("GamePlatform", b =>

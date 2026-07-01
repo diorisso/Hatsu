@@ -27,9 +27,21 @@ public class IgdbGame
 
     [JsonPropertyName("platforms")]
     public List<IgdbPlatform>? Platforms { get; set; }
+
+    [JsonPropertyName("genres")]
+    public List<IgdbGenre>? Genres { get; set; }
 }
 
 public class IgdbPlatform
+{
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+}
+
+public class IgdbGenre
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }

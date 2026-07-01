@@ -7,6 +7,7 @@ import type {
   RegisterRequest,
   RegisterResponse,
   UpdateEntryRequest,
+  UserResponse,
 } from './types'
 
 const TOKEN_KEY = 'hatsu.token'
@@ -33,7 +34,8 @@ export class ApiError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getToken()
   const headers = new Headers(init?.headers)
-  if (init?.body) headers.set('Content-Type', 'application/json')
+  if (init?.body && !(init.body instanceof FormData))
+    headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
   const response = await fetch(`${API_BASE}/api${path}`, { ...init, headers })
@@ -71,6 +73,19 @@ export const api = {
     search: (query: string, limit = 10) =>
       request<GameResponse[]>(`/games/search?query=${encodeURIComponent(query)}&limit=${limit}`),
     getById: (id: number) => request<GameResponse>(`/games/${id}`),
+  },
+  users: {
+    me: () => request<UserResponse>('/users/me'),
+    updateProfile: (body: { username: string }) =>
+      request<UserResponse>('/users/me', { method: 'PATCH', body: JSON.stringify(body) }),
+    changePassword: (body: { currentPassword: string; newPassword: string }) =>
+      request<void>('/users/me/password', { method: 'POST', body: JSON.stringify(body) }),
+    uploadAvatar: (file: File) => {
+      const form = new FormData()
+      form.append('file', file)
+      return request<UserResponse>('/users/me/avatar', { method: 'POST', body: form })
+    },
+    removeAvatar: () => request<UserResponse>('/users/me/avatar', { method: 'DELETE' }),
   },
   entries: {
     mine: () => request<EntryResponse[]>('/entries/me'),

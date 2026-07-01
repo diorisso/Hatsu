@@ -6,8 +6,8 @@
   --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   --accent: #ee6c4d;
-  --accent-soft: rgba(238, 108, 77, 0.12);
-  --ring: rgba(238, 108, 77, 0.45);
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+  --ring: color-mix(in srgb, var(--accent) 45%, transparent);
 
   --radius: 14px;
   --radius-sm: 10px;
@@ -26,7 +26,7 @@
   --border: rgba(23, 26, 33, 0.1);
   --seg-track: rgba(23, 26, 33, 0.05);
   --shadow: 0 18px 50px -28px rgba(23, 26, 33, 0.5);
-  --accent-press: #d9583c;
+  --accent-press: color-mix(in srgb, var(--accent) 88%, #000);
 }
 
 :root[data-theme='dark'] {
@@ -41,7 +41,7 @@
   --border: rgba(254, 255, 254, 0.1);
   --seg-track: rgba(254, 255, 254, 0.06);
   --shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
-  --accent-press: #f17d61;
+  --accent-press: color-mix(in srgb, var(--accent) 82%, #fff);
 }
 
 * {

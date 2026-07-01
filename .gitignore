@@ -4,5 +4,6 @@ bin
 .git
 .idea
 .env
+obj
 
 deploy.sh

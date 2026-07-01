@@ -1,0 +1,126 @@
+.account {
+  position: relative;
+}
+
+.account__trigger {
+  display: inline-flex;
+  padding: 2px;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.account__trigger:hover {
+  box-shadow: 0 0 0 2px var(--field-border);
+}
+
+.account__trigger[aria-expanded='true'] {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.account__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  animation: account-pop 0.16s var(--ease);
+}
+
+@keyframes account-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.account__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 10px;
+}
+
+.account__id {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.account__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account__email {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account__sep {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+}
+
+.account__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  font-size: 0.86rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.account__item:hover {
+  background: var(--seg-track);
+}
+
+.account__item:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.account__item--danger {
+  color: var(--text-muted);
+}
+
+.account__item--danger:hover {
+  color: var(--text);
+}
+
+.account__error {
+  margin: 4px 6px 0;
+  font-size: 0.78rem;
+  color: var(--accent);
+}

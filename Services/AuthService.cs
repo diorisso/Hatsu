@@ -113,6 +113,20 @@ public class AuthService : IAuthService
         await SendVerificationAsync(xUser);
     }
 
+    public async Task ChangePasswordAsync(int pUserId, ChangePasswordRequest pRequest)
+    {
+        var xUser = await _userService.GetByIdAsync(pUserId);
+        if (xUser == null)
+            throw new InvalidOperationException("Account not found.");
+
+        var xVerification = _passwordHasher.VerifyHashedPassword(xUser, xUser.PasswordHash, pRequest.CurrentPassword);
+        if (xVerification == PasswordVerificationResult.Failed)
+            throw new InvalidOperationException("Current password is incorrect.");
+
+        xUser.PasswordHash = _passwordHasher.HashPassword(xUser, pRequest.NewPassword);
+        await _userService.UpdateAsync(xUser);
+    }
+
     private async Task SendVerificationAsync(User pUser)
     {
         try

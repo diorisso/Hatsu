@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hatsu — Sign in</title>
     <script>
@@ -13,6 +13,8 @@
             stored ||
             (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
           document.documentElement.dataset.theme = theme
+          var accent = localStorage.getItem('hatsu.accent')
+          if (accent) document.documentElement.style.setProperty('--accent', accent)
         } catch (e) {
           document.documentElement.dataset.theme = 'light'
         }

@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom'
 import { ThemeToggle } from '../theme/ThemeToggle'
-import { useSession } from '../session/SessionProvider'
+import { AccountMenu } from './AccountMenu'
 import './layout.css'
 
 function SearchBar() {
@@ -41,8 +41,6 @@ function SearchBar() {
 }
 
 export function AppLayout() {
-  const { signOut } = useSession()
-
   return (
     <div className="app">
       <header className="topbar">
@@ -52,9 +50,7 @@ export function AppLayout() {
         <SearchBar />
         <div className="topbar__actions">
           <ThemeToggle />
-          <button type="button" className="ghost-btn" onClick={signOut}>
-            Sign out
-          </button>
+          <AccountMenu />
         </div>
       </header>
       <Outlet />

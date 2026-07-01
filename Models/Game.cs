@@ -17,5 +17,7 @@ public class Game : Entity<long>
 
     public List<Platform> Platforms { get; set; } = new();
 
+    public List<Genre> Genres { get; set; } = new();
+
     public List<Entry> Entries { get; set; } = new();
 }

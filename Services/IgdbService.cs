@@ -12,19 +12,21 @@ public class IgdbService : IIgdbService
 {
     private const int _PAGE_MAX = 100;
     private const string _FIELDS = "fields id,game_type,name,summary,first_release_date,total_rating_count,cover.url," +
-        "involved_companies.company.name,involved_companies.developer,involved_companies.publisher,platforms.name;";
+        "involved_companies.company.name,involved_companies.developer,involved_companies.publisher,platforms.name,genres.name;";
 
     private readonly IIgdbApi _igdbApi;
     private readonly IGameRepository _gameRepository;
     private readonly ICompanyRepository _companyRepository;
     private readonly IPlatformRepository _platformRepository;
+    private readonly IGenreRepository _genreRepository;
 
-    public IgdbService(IIgdbApi pIgdbApi, IGameRepository pGameRepository, ICompanyRepository pCompanyRepository, IPlatformRepository pPlatformRepository)
+    public IgdbService(IIgdbApi pIgdbApi, IGameRepository pGameRepository, ICompanyRepository pCompanyRepository, IPlatformRepository pPlatformRepository, IGenreRepository pGenreRepository)
     {
         _igdbApi = pIgdbApi;
         _gameRepository = pGameRepository;
         _companyRepository = pCompanyRepository;
         _platformRepository = pPlatformRepository;
+        _genreRepository = pGenreRepository;
     }
 
     public async Task<IReadOnlyList<GameResponse>> SearchGamesAsync(string pSearch, int pLimit = 10)
@@ -94,6 +96,9 @@ public class IgdbService : IIgdbService
                 : new CompanySummary { Id = pGame.Publisher.Id, Name = pGame.Publisher.Name },
             Platforms = pGame.Platforms
                 .Select(p => new PlatformSummary { Id = p.Id, Name = p.Name })
+                .ToList(),
+            Genres = pGame.Genres
+                .Select(g => new GenreSummary { Id = g.Id, Name = g.Name })
                 .ToList()
         };
         return xReturn;
@@ -110,6 +115,7 @@ public class IgdbService : IIgdbService
         var xDeveloper = await ResolveCompanyAsync(pIgdbGame.InvolvedCompanies?.FirstOrDefault(p => p.Developer));
         var xPublisher = await ResolveCompanyAsync(pIgdbGame.InvolvedCompanies?.FirstOrDefault(p => p.Publisher));
         var xPlatforms = await ResolvePlatformsAsync(pIgdbGame.Platforms);
+        var xGenres = await ResolveGenresAsync(pIgdbGame.Genres);
 
         var xGame = new Game
         {
@@ -125,7 +131,8 @@ public class IgdbService : IIgdbService
             Developer = xDeveloper,
             PublisherId = xPublisher?.Id,
             Publisher = xPublisher,
-            Platforms = xPlatforms
+            Platforms = xPlatforms,
+            Genres = xGenres
         };
 
         await _gameRepository.AddAsync(xGame);
@@ -180,6 +187,32 @@ public class IgdbService : IIgdbService
             await _platformRepository.AddAsync(xPlatform);
             await _platformRepository.SaveAsync();
             xReturn.Add(xPlatform);
+        }
+
+        return xReturn;
+    }
+
+    private async Task<List<Genre>> ResolveGenresAsync(List<IgdbGenre>? pGenres)
+    {
+        var xReturn = new List<Genre>();
+        if (pGenres == null)
+            return xReturn;
+
+        foreach (var xIgdbGenre in pGenres)
+        {
+            var xIgdbId = (int)xIgdbGenre.Id;
+
+            var xExisting = await _genreRepository.GetByIdAsync(xIgdbId);
+            if (xExisting != null)
+            {
+                xReturn.Add(xExisting);
+                continue;
+            }
+
+            var xGenre = new Genre { Id = xIgdbId, Name = xIgdbGenre.Name };
+            await _genreRepository.AddAsync(xGenre);
+            await _genreRepository.SaveAsync();
+            xReturn.Add(xGenre);
         }
 
         return xReturn;

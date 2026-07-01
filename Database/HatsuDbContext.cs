@@ -13,6 +13,7 @@ public class HatsuDbContext : DbContext
     public DbSet<Entry> Entries => Set<Entry>();
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Platform> Platforms => Set<Platform>();
+    public DbSet<Genre> Genres => Set<Genre>();
 
     public override int SaveChanges()
     {
@@ -61,8 +62,15 @@ public class HatsuDbContext : DbContext
         pModelBuilder.Entity<Platform>()
             .Property(p => p.Id).ValueGeneratedNever();
 
+        pModelBuilder.Entity<Genre>()
+            .Property(g => g.Id).ValueGeneratedNever();
+
         pModelBuilder.Entity<Game>()
             .HasMany(g => g.Platforms)
+            .WithMany();
+
+        pModelBuilder.Entity<Game>()
+            .HasMany(g => g.Genres)
             .WithMany();
 
         pModelBuilder.Entity<Game>()

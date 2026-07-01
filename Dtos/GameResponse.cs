@@ -13,6 +13,7 @@ public class GameResponse
     public CompanySummary? Developer { get; set; }
     public CompanySummary? Publisher { get; set; }
     public List<PlatformSummary> Platforms { get; set; } = new();
+    public List<GenreSummary> Genres { get; set; } = new();
 }
 
 public class CompanySummary
@@ -22,6 +23,12 @@ public class CompanySummary
 }
 
 public class PlatformSummary
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+public class GenreSummary
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
