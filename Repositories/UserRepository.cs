@@ -32,4 +32,18 @@ public class UserRepository : Repository<User, int>, IUserRepository
             .FirstOrDefaultAsync(p => p.EmailVerificationToken == pToken);
         return xReturn;
     }
+
+    public async Task<List<User>> SearchByUsernameAsync(string pQuery, int pLimit)
+    {
+        var xReturn = await _dbSet
+            .Where(p => !p.IsExcluded && p.EmailConfirmed)
+            .Where(p => EF.Functions.ILike(
+                HatsuDbContext.Unaccent(p.Username), HatsuDbContext.Unaccent($"%{pQuery}%")))
+            .OrderBy(p => EF.Functions.ILike(
+                HatsuDbContext.Unaccent(p.Username), HatsuDbContext.Unaccent($"{pQuery}%")) ? 0 : 1)
+            .ThenBy(p => p.Username)
+            .Take(pLimit)
+            .ToListAsync();
+        return xReturn;
+    }
 }

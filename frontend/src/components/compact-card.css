@@ -12,6 +12,12 @@
   box-shadow: 0 0 16px -3px color-mix(in srgb, var(--status-color) 55%, transparent);
 }
 
+.compact-card:hover .more-btn,
+.compact-card:focus-within .more-btn {
+  opacity: 1;
+  transform: none;
+}
+
 .compact-card__cover {
   position: relative;
   aspect-ratio: 3 / 4;

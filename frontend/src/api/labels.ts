@@ -16,8 +16,8 @@ export const STATUS_COLOR: Record<EntryStatus, string> = {
 
 export const STATUS_SORT_ORDER: Record<EntryStatus, number> = {
   [EntryStatus.Playing]: 0,
-  [EntryStatus.Backlog]: 1,
-  [EntryStatus.Completed]: 2,
+  [EntryStatus.Completed]: 1,
+  [EntryStatus.Backlog]: 2,
   [EntryStatus.Dropped]: 3,
 }
 
@@ -46,8 +46,8 @@ export const STATUS_OPTIONS: EntryStatus[] = [
   EntryStatus.Dropped,
 ]
 
-export function coverUrl(raw: string | null, size = 't_cover_big'): string | null {
+export function coverUrl(raw: string | null, size = 't_cover_big_2x'): string | null {
   if (!raw) return null
   const normalized = raw.startsWith('//') ? `https:${raw}` : raw
-  return normalized.replace('t_thumb', size)
+  return normalized.replace(/\/t_[a-z0-9_]+\//, `/${size}/`)
 }

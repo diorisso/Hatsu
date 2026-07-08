@@ -111,6 +111,44 @@
   cursor: default;
 }
 
+.account__item--toggle {
+  justify-content: space-between;
+}
+
+.account__switch {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--seg-track);
+  border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.account__switch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transform: translateY(-50%);
+  transition: transform 0.2s var(--ease), background 0.2s;
+}
+
+.account__switch[data-on='true'] {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.account__switch[data-on='true']::after {
+  transform: translate(14px, -50%);
+  background: var(--accent);
+}
+
 .account__item--danger {
   color: var(--text-muted);
 }

@@ -20,6 +20,7 @@ namespace Hatsu.Migrations
                 .HasAnnotation("ProductVersion", "8.0.28")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("GameGenre", b =>
@@ -117,6 +118,72 @@ namespace Hatsu.Migrations
                     b.ToTable("Entries");
                 });
 
+            modelBuilder.Entity("Hatsu.Models.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("GameId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsExcluded")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId", "GameId")
+                        .IsUnique();
+
+                    b.ToTable("Favorites");
+                });
+
+            modelBuilder.Entity("Hatsu.Models.Follow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("FolloweeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FollowerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsExcluded")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolloweeId");
+
+                    b.HasIndex("FollowerId", "FolloweeId")
+                        .IsUnique();
+
+                    b.ToTable("Follows");
+                });
+
             modelBuilder.Entity("Hatsu.Models.Game", b =>
                 {
                     b.Property<long>("Id")
@@ -211,6 +278,46 @@ namespace Hatsu.Migrations
                     b.ToTable("Platforms");
                 });
 
+            modelBuilder.Entity("Hatsu.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsExcluded")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("Hatsu.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -220,6 +327,12 @@ namespace Hatsu.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AvatarKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BannerKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Bio")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -312,6 +425,44 @@ namespace Hatsu.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Hatsu.Models.Favorite", b =>
+                {
+                    b.HasOne("Hatsu.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hatsu.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Hatsu.Models.Follow", b =>
+                {
+                    b.HasOne("Hatsu.Models.User", "Followee")
+                        .WithMany()
+                        .HasForeignKey("FolloweeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Hatsu.Models.User", "Follower")
+                        .WithMany()
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Followee");
+
+                    b.Navigation("Follower");
+                });
+
             modelBuilder.Entity("Hatsu.Models.Game", b =>
                 {
                     b.HasOne("Hatsu.Models.Company", "Developer")
@@ -329,6 +480,17 @@ namespace Hatsu.Migrations
                     b.Navigation("Publisher");
                 });
 
+            modelBuilder.Entity("Hatsu.Models.RefreshToken", b =>
+                {
+                    b.HasOne("Hatsu.Models.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Hatsu.Models.Company", b =>
                 {
                     b.Navigation("GamesDeveloped");
@@ -344,6 +506,8 @@ namespace Hatsu.Migrations
             modelBuilder.Entity("Hatsu.Models.User", b =>
                 {
                     b.Navigation("Entries");
+
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

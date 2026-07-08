@@ -21,6 +21,10 @@ public class EntryRepository : Repository<Entry, int>, IEntryRepository
     {
         var xReturn = await _dbSet
             .Where(p => !p.IsExcluded && p.UserId == pUserId)
+            .Include(p => p.Game)
+                .ThenInclude(g => g.Developer)
+            .Include(p => p.Game)
+                .ThenInclude(g => g.Genres)
             .ToListAsync();
         return xReturn;
     }

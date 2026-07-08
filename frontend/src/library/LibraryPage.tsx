@@ -1,19 +1,20 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
-import type { EntryResponse, EntryStatus, GameResponse } from '../api/types'
+import type { EntryStatus, EntryViewModel, GameSummary } from '../api/types'
 import { STATUS_COLOR, STATUS_LABEL, STATUS_OPTIONS, STATUS_SORT_ORDER } from '../api/labels'
 import { EntryCard } from '../components/EntryCard'
 import { CompactCard } from '../components/CompactCard'
 import { EntryRow } from '../components/EntryRow'
+import { EditEntryModal } from '../components/EditEntryModal'
 import { StatusIcon } from '../components/StatusIcon'
 import { SortMenu } from './SortMenu'
 import { useSession } from '../session/SessionProvider'
 import './library.css'
 
 interface LibraryItem {
-  entry: EntryResponse
-  game: GameResponse | null
+  entry: EntryViewModel
+  game: GameSummary | null
 }
 
 type LoadState =
@@ -45,23 +46,33 @@ function readStored<T extends string>(key: string, allowed: T[], fallback: T): T
 }
 
 function titleOf(item: LibraryItem): string {
-  return item.game?.name ?? `Game #${item.entry.gameId}`
+  return item.game?.name ?? `Game #${item.game?.id ?? item.entry.id}`
 }
 
-function renderItems(items: LibraryItem[], view: ViewMode) {
+function renderItems(
+  items: LibraryItem[],
+  view: ViewMode,
+  favoriteIds: Set<number>,
+  onEdit: (item: LibraryItem) => void,
+) {
   if (view === 'list') {
     return (
       <div className="lib-list">
-        {items.map(({ entry, game }) => (
-          <EntryRow
-            key={entry.id}
-            to={`/game/${entry.gameId}`}
-            title={game?.name ?? `Game #${entry.gameId}`}
-            status={entry.status}
-            rating={entry.rating}
-            cover={game?.coverUrl ?? null}
-          />
-        ))}
+        {items.map((item) => {
+          const { entry, game } = item
+          return (
+            <EntryRow
+              key={entry.id}
+              to={`/game/${game?.id ?? ''}`}
+              title={game?.name ?? `Game #${entry.id}`}
+              status={entry.status}
+              rating={entry.rating}
+              cover={game?.coverUrl ?? null}
+              favorite={game != null && favoriteIds.has(game.id)}
+              onEdit={() => onEdit(item)}
+            />
+          )
+        })}
       </div>
     )
   }
@@ -69,15 +80,17 @@ function renderItems(items: LibraryItem[], view: ViewMode) {
   const gridClass = view === 'compact' ? 'card-grid card-grid--compact' : 'card-grid'
   return (
     <div className={gridClass}>
-      {items.map(({ entry, game }) => {
-        const title = game?.name ?? `Game #${entry.gameId}`
+      {items.map((item) => {
+        const { entry, game } = item
+        const title = game?.name ?? `Game #${entry.id}`
         const cover = game?.coverUrl ?? null
+        const favorite = game != null && favoriteIds.has(game.id)
         return (
-          <Link key={entry.id} to={`/game/${entry.gameId}`} className="card-link">
+          <Link key={entry.id} to={`/game/${game?.id ?? ''}`} className="card-link">
             {view === 'compact' ? (
-              <CompactCard title={title} status={entry.status} rating={entry.rating} cover={cover} />
+              <CompactCard title={title} status={entry.status} rating={entry.rating} cover={cover} favorite={favorite} onEdit={() => onEdit(item)} />
             ) : (
-              <EntryCard title={title} status={entry.status} rating={entry.rating} cover={cover} />
+              <EntryCard title={title} status={entry.status} rating={entry.rating} cover={cover} favorite={favorite} onEdit={() => onEdit(item)} />
             )}
           </Link>
         )
@@ -112,6 +125,8 @@ export function LibraryPage() {
   const [sort, setSort] = useState<SortKey>(() => readStored(SORT_KEY, SORT_KEYS, 'added'))
   const [view, setView] = useState<ViewMode>(() => readStored(VIEW_KEY, VIEW_MODES, 'cards'))
   const [collapsed, setCollapsed] = useState<Set<EntryStatus>>(() => new Set())
+  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(() => new Set())
+  const [editing, setEditing] = useState<LibraryItem | null>(null)
 
   useEffect(() => {
     localStorage.setItem(SORT_KEY, sort)
@@ -135,20 +150,12 @@ export function LibraryPage() {
 
     async function load() {
       try {
-        const entries = await api.entries.mine()
-        const ids = [...new Set(entries.map((entry) => entry.gameId))]
-        const games = await Promise.all(
-          ids.map((id) => api.games.getById(id).catch(() => null)),
-        )
-        const gameById = new Map<number, GameResponse>()
-        for (const game of games) {
-          if (game) gameById.set(game.id, game)
+        const vm = await api.library.me()
+        const items = vm.entries.map((entry) => ({ entry, game: entry.game }))
+        if (active) {
+          setFavoriteIds(new Set(vm.favoriteGameIds))
+          setState({ status: 'ready', items })
         }
-        const items = entries.map((entry) => ({
-          entry,
-          game: gameById.get(entry.gameId) ?? null,
-        }))
-        if (active) setState({ status: 'ready', items })
       } catch (err) {
         if (!active) return
         if (err instanceof ApiError && err.status === 401) {
@@ -298,12 +305,55 @@ export function LibraryPage() {
                     </svg>
                   </button>
                   <div className="group__body" data-open={open}>
-                    <div className="group__inner">{renderItems(groupItems, view)}</div>
+                    <div className="group__inner">{renderItems(groupItems, view, favoriteIds, setEditing)}</div>
                   </div>
                 </section>
               )
           })}
         </div>
+      )}
+
+      {editing && (
+        <EditEntryModal
+          entryId={editing.entry.id}
+          title={editing.game?.name ?? `Game #${editing.entry.id}`}
+          cover={editing.game?.coverUrl ?? null}
+          initialStatus={editing.entry.status}
+          initialRating={editing.entry.rating}
+          onClose={() => setEditing(null)}
+          onSaved={(updated) => {
+            setState((prev) =>
+              prev.status === 'ready'
+                ? {
+                    status: 'ready',
+                    items: prev.items.map((it) =>
+                      it.entry.id === updated.id
+                        ? {
+                            ...it,
+                            entry: {
+                              ...it.entry,
+                              status: updated.status,
+                              rating: updated.rating,
+                              notes: updated.notes,
+                              updatedAt: updated.updatedAt,
+                            },
+                          }
+                        : it,
+                    ),
+                  }
+                : prev,
+            )
+            setEditing(null)
+          }}
+          onRemoved={(entryId) => {
+            setState((prev) =>
+              prev.status === 'ready'
+                ? { status: 'ready', items: prev.items.filter((it) => it.entry.id !== entryId) }
+                : prev,
+            )
+            setEditing(null)
+          }}
+        />
       )}
     </section>
   )

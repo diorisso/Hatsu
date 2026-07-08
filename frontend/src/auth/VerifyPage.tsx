@@ -24,7 +24,7 @@ export function VerifyPage() {
     api.auth
       .verify(token)
       .then((result) => {
-        signIn(result.token)
+        signIn(result)
         navigate('/', { replace: true })
       })
       .catch((err) => {

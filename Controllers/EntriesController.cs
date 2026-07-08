@@ -48,23 +48,6 @@ public class EntriesController : ControllerBase
         }
     }
 
-    [HttpGet("me")]
-    public async Task<IActionResult> GetMine()
-    {
-        var xUserId = GetUserId();
-        var xEntries = await _entryService.ListByUserAsync(xUserId);
-        var xReturn = xEntries.Select(ToResponse).ToList();
-        return Ok(xReturn);
-    }
-
-    [HttpGet("user/{userId:int}")]
-    public async Task<IActionResult> GetByUser(int userId)
-    {
-        var xEntries = await _entryService.ListByUserAsync(userId);
-        var xReturn = xEntries.Select(ToResponse).ToList();
-        return Ok(xReturn);
-    }
-
     [HttpPatch("{id:int}")]
     public async Task<IActionResult> Update(int id, UpdateEntryRequest pRequest)
     {
@@ -110,7 +93,6 @@ public class EntriesController : ControllerBase
         var xReturn = new EntryResponse
         {
             Id = pEntry.Id,
-            UserId = pEntry.UserId,
             GameId = pEntry.GameId,
             Status = pEntry.Status,
             Rating = pEntry.Rating,

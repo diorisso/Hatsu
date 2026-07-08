@@ -62,3 +62,23 @@
     display: none;
   }
 }
+
+.lib-row__fav {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+
+.lib-row .more-btn--inline {
+  color: var(--text-muted);
+  background: none;
+  backdrop-filter: none;
+}
+
+.lib-row:hover .more-btn--inline {
+  opacity: 1;
+}
+
+.lib-row .more-btn--inline:hover {
+  color: var(--text);
+  background: var(--seg-track);
+}

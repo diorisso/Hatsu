@@ -1,0 +1,134 @@
+.smodal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(16px, 10vh, 120px) 20px 20px;
+}
+
+.smodal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(23, 26, 33, 0.55);
+  backdrop-filter: blur(4px);
+  animation: smodal-fade 0.2s var(--ease);
+}
+
+.smodal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: smodal-pop 0.22s var(--ease);
+}
+
+.smodal__search {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-faint);
+}
+
+.smodal__input {
+  flex: 1;
+  min-width: 0;
+  font-size: 1rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+.smodal__input::placeholder {
+  color: var(--text-faint);
+}
+
+.smodal__esc {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  background: var(--seg-track);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+
+.smodal__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+}
+
+.smodal__tab {
+  padding: 7px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.smodal__tab:hover {
+  color: var(--text);
+}
+
+.smodal__tab[aria-selected='true'] {
+  color: var(--text);
+  background: var(--seg-track);
+}
+
+.smodal__results {
+  max-height: min(52vh, 520px);
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.smodal__hint {
+  margin: 0;
+  padding: 18px 8px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+@keyframes smodal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes smodal-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smodal__backdrop,
+  .smodal__panel {
+    animation: none;
+  }
+}

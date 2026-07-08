@@ -15,6 +15,7 @@ export function SettingsPage() {
   const { accent, setAccent } = useAccent()
 
   const [username, setUsername] = useState(user?.username ?? '')
+  const [bio, setBio] = useState(user?.bio ?? '')
   const [profileNote, setProfileNote] = useState<string | null>(null)
   const [profileError, setProfileError] = useState<string | null>(null)
   const [savingProfile, setSavingProfile] = useState(false)
@@ -22,6 +23,10 @@ export function SettingsPage() {
   const [avatarBusy, setAvatarBusy] = useState(false)
   const [avatarError, setAvatarError] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  const [bannerBusy, setBannerBusy] = useState(false)
+  const [bannerError, setBannerError] = useState<string | null>(null)
+  const bannerRef = useRef<HTMLInputElement>(null)
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -31,21 +36,32 @@ export function SettingsPage() {
   const [savingPw, setSavingPw] = useState(false)
 
   useEffect(() => {
-    if (user) setUsername(user.username)
+    if (user) {
+      setUsername(user.username)
+      setBio(user.bio ?? '')
+    }
   }, [user])
 
   const name = user?.username ?? ''
   const avatarUrl = user?.avatarUrl ?? null
-  const usernameDirty = username.trim().length > 0 && username.trim() !== user?.username
+  const bannerUrl = user?.bannerUrl ?? null
+  const usernameValid = username.trim().length >= 2
+  const normalizedBio = bio.trim() ? bio.trim() : null
+  const profileDirty =
+    username.trim() !== user?.username || normalizedBio !== (user?.bio ?? null)
+  const canSaveProfile = usernameValid && profileDirty
 
   async function saveProfile(event: FormEvent) {
     event.preventDefault()
-    if (!usernameDirty) return
+    if (!canSaveProfile) return
     setSavingProfile(true)
     setProfileError(null)
     setProfileNote(null)
     try {
-      const updated = await api.users.updateProfile({ username: username.trim() })
+      const updated = await api.users.updateProfile({
+        username: username.trim(),
+        bio: normalizedBio,
+      })
       updateUser(updated)
       setProfileNote('Profile updated.')
     } catch (err) {
@@ -92,6 +108,43 @@ export function SettingsPage() {
     }
   }
 
+  async function handleBanner(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setBannerError('Choose an image file.')
+      return
+    }
+    if (file.size > MAX_BYTES) {
+      setBannerError('Image must be 5 MB or smaller.')
+      return
+    }
+    setBannerBusy(true)
+    setBannerError(null)
+    try {
+      const updated = await api.users.uploadBanner(file)
+      updateUser(updated)
+    } catch (err) {
+      setBannerError(err instanceof ApiError ? err.message : 'Upload failed. Try again.')
+    } finally {
+      setBannerBusy(false)
+    }
+  }
+
+  async function removeBanner() {
+    setBannerBusy(true)
+    setBannerError(null)
+    try {
+      const updated = await api.users.removeBanner()
+      updateUser(updated)
+    } catch (err) {
+      setBannerError(err instanceof ApiError ? err.message : 'Could not remove banner.')
+    } finally {
+      setBannerBusy(false)
+    }
+  }
+
   async function savePassword(event: FormEvent) {
     event.preventDefault()
     setPwError(null)
@@ -127,6 +180,31 @@ export function SettingsPage() {
 
       <div className="settings__card">
         <h2 className="settings__title">Profile</h2>
+
+        <div className="settings__banner">
+          {bannerUrl ? (
+            <img className="settings__banner-img" src={bannerUrl} alt="" />
+          ) : (
+            <div className="settings__banner-empty" />
+          )}
+          <div className="settings__banner-actions">
+            <input ref={bannerRef} type="file" accept="image/*" hidden onChange={handleBanner} />
+            <button
+              type="button"
+              className="ghost-btn"
+              disabled={bannerBusy}
+              onClick={() => bannerRef.current?.click()}
+            >
+              {bannerBusy ? 'Working…' : bannerUrl ? 'Change banner' : 'Upload banner'}
+            </button>
+            {bannerUrl && (
+              <button type="button" className="ghost-btn" disabled={bannerBusy} onClick={removeBanner}>
+                Remove
+              </button>
+            )}
+          </div>
+        </div>
+        {bannerError && <p className="settings__error">{bannerError}</p>}
 
         <div className="settings__avatar">
           <Avatar name={name} src={avatarUrl} size={72} />
@@ -171,10 +249,23 @@ export function SettingsPage() {
               disabled
             />
           </label>
+          <label className="field" htmlFor="settings-bio">
+            <span className="field__label">Bio</span>
+            <textarea
+              id="settings-bio"
+              className="field__input settings__bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              maxLength={500}
+              rows={4}
+              placeholder="Tell people about yourself…"
+            />
+            <span className="field__hint">{500 - bio.length} left</span>
+          </label>
           {profileError && <p className="settings__error">{profileError}</p>}
           {profileNote && <p className="settings__note">{profileNote}</p>}
           <div className="settings__actions">
-            <button className="btn" type="submit" disabled={!usernameDirty || savingProfile}>
+            <button className="btn" type="submit" disabled={!canSaveProfile || savingProfile}>
               {savingProfile ? 'Saving…' : 'Save changes'}
             </button>
           </div>

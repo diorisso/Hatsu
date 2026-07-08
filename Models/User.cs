@@ -11,6 +11,9 @@ public class User : Entity<int>
     public DateTime? EmailVerificationTokenExpiresAt { get; set; }
 
     public string? AvatarKey { get; set; }
+    public string? BannerKey { get; set; }
+    public string? Bio { get; set; }
 
     public List<Entry> Entries { get; set; } = new();
+    public List<RefreshToken> RefreshTokens { get; set; } = new();
 }

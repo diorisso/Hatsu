@@ -35,7 +35,7 @@
   left: -8%;
   width: 60%;
   height: 60%;
-  background: radial-gradient(circle, rgba(238, 108, 77, 0.5), transparent 65%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 50%, transparent), transparent 65%);
   filter: blur(44px);
   opacity: 0.5;
   pointer-events: none;
@@ -56,35 +56,52 @@
   min-height: 0;
 }
 
-.card--hero {
+.deck {
   position: relative;
   z-index: 1;
   width: min(300px, 82%);
-  padding: 14px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(254, 255, 254, 0.07), rgba(254, 255, 254, 0.03));
-  border: 1px solid rgba(254, 255, 254, 0.1);
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.75);
+  height: 244px;
   animation: rise 0.7s 0.05s var(--ease) both;
 }
 
-.card--ghost {
+.card {
   position: absolute;
-  z-index: 0;
-  top: 50%;
-  left: 50%;
-  width: min(300px, 82%);
-  height: 64%;
+  inset: 0;
+  padding: 14px;
   border-radius: 18px;
-  background: rgba(254, 255, 254, 0.035);
-  border: 1px solid rgba(254, 255, 254, 0.08);
-  transform: translate(-42%, -62%) rotate(-5deg);
+  background: linear-gradient(180deg, rgba(28, 32, 41, 0.98), rgba(20, 23, 30, 0.98));
+  border: 1px solid rgba(254, 255, 254, 0.1);
+  box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform-origin: 50% 90%;
+  will-change: transform, opacity;
+  animation: deck-shuffle 12.8s linear infinite;
+  animation-delay: calc(var(--i) * -1.6s);
+}
+
+.deck::before,
+.deck::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(28, 32, 41, 0.55), rgba(20, 23, 30, 0.55));
+  border: 1px solid rgba(254, 255, 254, 0.06);
+}
+
+.deck::before {
+  transform: translate(11px, 9px) rotate(3deg);
+}
+
+.deck::after {
+  transform: translate(-9px, 5px) rotate(-3.5deg);
 }
 
 .card__cover {
   height: 116px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), #171a21 88%);
+  background: linear-gradient(135deg, var(--cover, var(--accent)), #171a21 88%);
   position: relative;
   overflow: hidden;
 }
@@ -110,7 +127,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #fff;
-  background: #71b340;
+  background: var(--status, #71b340);
   padding: 4px 9px;
   border-radius: 999px;
 }
@@ -130,13 +147,90 @@
 }
 
 .rating__star {
-  fill: #71b340;
+  fill: var(--status, #71b340);
 }
 
 .rating__value {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: rgba(254, 255, 254, 0.7);
+}
+
+@keyframes deck-shuffle {
+  0% {
+    transform: translate(0, 0) rotate(-1.5deg) scale(1);
+    opacity: 1;
+    z-index: 95;
+    animation-timing-function: cubic-bezier(0.6, 0, 0.2, 1);
+  }
+  4% {
+    transform: translate(38px, -28px) rotate(8deg) scale(1.03);
+    opacity: 1;
+    z-index: 95;
+  }
+  5.5% {
+    transform: translate(52px, -37px) rotate(11deg) scale(1.04);
+    opacity: 1;
+    z-index: 95;
+  }
+  7% {
+    transform: translate(64px, -46px) rotate(13deg) scale(1.05);
+    opacity: 0;
+    z-index: 95;
+    animation-timing-function: steps(1, end);
+  }
+  7.5% {
+    transform: translate(0, 0) rotate(-1.5deg) scale(1);
+    opacity: 0;
+    z-index: 6;
+    animation-timing-function: linear;
+  }
+  10% {
+    opacity: 1;
+    z-index: 6;
+  }
+  26% {
+    z-index: 20;
+  }
+  45% {
+    z-index: 35;
+  }
+  64% {
+    z-index: 52;
+  }
+  82% {
+    z-index: 70;
+  }
+  93% {
+    z-index: 84;
+  }
+  100% {
+    transform: translate(0, 0) rotate(-1.5deg) scale(1);
+    opacity: 1;
+    z-index: 90;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    opacity: 0.28;
+  }
+  .card:nth-child(3) {
+    transform: translate(0, 22px) rotate(4deg) scale(0.9);
+    opacity: 0.55;
+    z-index: 40;
+  }
+  .card:nth-child(2) {
+    transform: translate(0, 12px) rotate(-3deg) scale(0.95);
+    opacity: 0.8;
+    z-index: 60;
+  }
+  .card:first-child {
+    transform: translate(0, 0) rotate(-2deg) scale(1);
+    opacity: 1;
+    z-index: 80;
+  }
 }
 
 .brand__foot {

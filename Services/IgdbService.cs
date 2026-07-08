@@ -123,7 +123,7 @@ public class IgdbService : IIgdbService
             Type = (GameType)(pIgdbGame.GameType ?? 0),
             Name = pIgdbGame.Name,
             Summary = pIgdbGame.Summary,
-            CoverUrl = pIgdbGame.Cover?.Url,
+            CoverUrl = BuildCoverUrl(pIgdbGame.Cover?.Url),
             ReleaseDate = pIgdbGame.FirstReleaseDate.HasValue
                 ? DateTimeOffset.FromUnixTimeSeconds(pIgdbGame.FirstReleaseDate.Value).UtcDateTime
                 : null,
@@ -139,6 +139,19 @@ public class IgdbService : IIgdbService
         await _gameRepository.SaveAsync();
 
         var xReturn = xGame;
+        return xReturn;
+    }
+
+    private static string? BuildCoverUrl(string? pUrl)
+    {
+        if (string.IsNullOrWhiteSpace(pUrl))
+            return null;
+
+        var xUrl = pUrl.Replace("t_thumb", "t_cover_big_2x");
+        if (xUrl.StartsWith("//"))
+            xUrl = "https:" + xUrl;
+
+        var xReturn = xUrl;
         return xReturn;
     }
 

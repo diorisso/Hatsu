@@ -5,7 +5,6 @@ namespace Hatsu.Dtos;
 public class EntryResponse
 {
     public int Id { get; set; }
-    public int UserId { get; set; }
     public long GameId { get; set; }
     public EntryStatus Status { get; set; }
     public byte? Rating { get; set; }

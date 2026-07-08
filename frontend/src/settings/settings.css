@@ -146,3 +146,41 @@
     align-items: flex-start;
   }
 }
+
+.settings__bio {
+  resize: vertical;
+  min-height: 96px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.field__hint {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+.settings__banner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.settings__banner-img,
+.settings__banner-empty {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  border-radius: var(--radius);
+  object-fit: cover;
+}
+
+.settings__banner-empty {
+  background: linear-gradient(120deg, var(--accent-soft), var(--seg-track));
+  border: 1px dashed var(--field-border);
+}
+
+.settings__banner-actions {
+  display: flex;
+  gap: 10px;
+}

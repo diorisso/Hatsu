@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSession } from '../session/SessionProvider'
+import { useTheme } from '../theme/ThemeProvider'
 import { Avatar } from './Avatar'
 import './account-menu.css'
 
 export function AccountMenu() {
   const { user, signOut } = useSession()
+  const { theme, toggle } = useTheme()
+  const isDark = theme === 'dark'
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -70,6 +73,17 @@ export function AccountMenu() {
           >
             Settings
           </Link>
+
+          <button
+            type="button"
+            className="account__item account__item--toggle"
+            role="menuitemcheckbox"
+            aria-checked={isDark}
+            onClick={toggle}
+          >
+            Dark mode
+            <span className="account__switch" data-on={isDark} aria-hidden="true" />
+          </button>
 
           <div className="account__sep" />
 

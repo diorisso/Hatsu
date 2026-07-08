@@ -29,4 +29,10 @@ public class UserService : Service<User, int>, IUserService
         var xReturn = await _userRepository.GetByEmailVerificationTokenAsync(pToken);
         return xReturn;
     }
+
+    public async Task<List<User>> SearchByUsernameAsync(string pQuery, int pLimit)
+    {
+        var xReturn = await _userRepository.SearchByUsernameAsync(pQuery, pLimit);
+        return xReturn;
+    }
 }

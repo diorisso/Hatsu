@@ -44,6 +44,12 @@ public class EntryService : Service<Entry, int>, IEntryService
         return xReturn;
     }
 
+    public async Task<Entry?> GetByUserAndGameAsync(int pUserId, long pGameId)
+    {
+        var xReturn = await _repository.GetByUserAndGameAsync(pUserId, pGameId);
+        return xReturn;
+    }
+
     public async Task<Entry> UpdateAsync(int pUserId, int pId, UpdateEntryRequest pRequest)
     {
         var xEntry = await _repository.GetByIdAsync(pId);

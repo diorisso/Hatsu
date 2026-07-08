@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type CSSProperties, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import { ThemeToggle } from '../theme/ThemeToggle'
@@ -7,6 +7,25 @@ import './auth.css'
 
 type Mode = 'login' | 'register'
 type ResendState = 'idle' | 'sending' | 'sent'
+
+interface DeckGame {
+  title: string
+  status: string
+  statusColor: string
+  cover: string
+  rating: number | null
+}
+
+const DECK: DeckGame[] = [
+  { title: 'Elden Ring', status: 'Now Playing', statusColor: '#71b340', cover: '#c8a24a', rating: 9 },
+  { title: 'Hollow Knight', status: 'Completed', statusColor: '#3f88c5', cover: '#4bb3a6', rating: 10 },
+  { title: 'Hades', status: 'Now Playing', statusColor: '#71b340', cover: '#c1292e', rating: 9 },
+  { title: 'Disco Elysium', status: 'Backlog', statusColor: '#f7b538', cover: '#6d5acd', rating: null },
+  { title: 'Celeste', status: 'Completed', statusColor: '#3f88c5', cover: '#d16ba5', rating: 9 },
+  { title: 'Stardew Valley', status: 'Now Playing', statusColor: '#71b340', cover: '#4e9c5b', rating: 8 },
+  { title: 'Cyberpunk 2077', status: 'Dropped', statusColor: '#c1292e', cover: '#e8c547', rating: 6 },
+  { title: 'Outer Wilds', status: 'Completed', statusColor: '#3f88c5', cover: '#3f6fc5', rating: 10 },
+]
 
 export function AuthPage() {
   const { signIn } = useSession()
@@ -52,7 +71,7 @@ export function AuthPage() {
         return
       }
       const result = await api.auth.login({ email, password })
-      signIn(result.token)
+      signIn(result)
       navigate('/', { replace: true })
     } catch (err) {
       if (err instanceof ApiError && err.status === 403) {
@@ -85,26 +104,41 @@ export function AuthPage() {
         <p className="brand__mobile-tag">Track every game you play.</p>
 
         <div className="brand__stage" aria-hidden="true">
-          <div className="card card--ghost" />
-          <article className="card card--hero">
-            <div className="card__cover" />
-            <div className="card__body">
-              <span className="chip">Now Playing</span>
-              <h2 className="card__title">Elden Ring</h2>
-              <div className="rating">
-                <svg
-                  className="rating__star"
-                  viewBox="0 0 24 24"
-                  width="15"
-                  height="15"
-                  aria-hidden="true"
-                >
-                  <path d="M12 2.6l2.82 5.72 6.31.92-4.57 4.45 1.08 6.29L12 17.93l-5.64 2.97 1.08-6.29-4.57-4.45 6.31-.92z" />
-                </svg>
-                <span className="rating__value">9 / 10</span>
-              </div>
-            </div>
-          </article>
+          <div className="deck" style={{ '--deck-count': DECK.length } as CSSProperties}>
+            {DECK.map((game, index) => (
+              <article
+                key={game.title}
+                className="card"
+                style={
+                  {
+                    '--i': index,
+                    '--cover': game.cover,
+                    '--status': game.statusColor,
+                  } as CSSProperties
+                }
+              >
+                <div className="card__cover" />
+                <div className="card__body">
+                  <span className="chip">{game.status}</span>
+                  <h2 className="card__title">{game.title}</h2>
+                  {game.rating !== null && (
+                    <div className="rating">
+                      <svg
+                        className="rating__star"
+                        viewBox="0 0 24 24"
+                        width="15"
+                        height="15"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 2.6l2.82 5.72 6.31.92-4.57 4.45 1.08 6.29L12 17.93l-5.64 2.97 1.08-6.29-4.57-4.45 6.31-.92z" />
+                      </svg>
+                      <span className="rating__value">{game.rating} / 10</span>
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
 
         <div className="brand__foot">

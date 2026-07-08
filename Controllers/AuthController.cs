@@ -53,6 +53,28 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequest pRequest)
+    {
+        try
+        {
+            var xReturn = await _authService.RefreshAsync(pRequest);
+            return Ok(xReturn);
+        }
+        catch (InvalidOperationException xEx)
+        {
+            _logger.LogWarning(xEx, "Failed to refresh access token");
+            return Unauthorized(new { message = xEx.Message });
+        }
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(RefreshRequest pRequest)
+    {
+        await _authService.RevokeAsync(pRequest);
+        return Ok(new { message = "Signed out." });
+    }
+
     [HttpGet("verify")]
     public async Task<IActionResult> Verify([FromQuery(Name = "token")] string pToken)
     {

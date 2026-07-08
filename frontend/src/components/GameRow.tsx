@@ -9,9 +9,10 @@ interface GameRowProps {
   game: GameResponse
   status: EntryStatus | null
   onAdd: (game: GameResponse) => void
+  onNavigate?: () => void
 }
 
-export function GameRow({ game, status, onAdd }: GameRowProps) {
+export function GameRow({ game, status, onAdd, onNavigate }: GameRowProps) {
   const src = coverUrl(game.coverUrl)
   const year = game.releaseDate ? new Date(game.releaseDate).getFullYear() : null
   const meta = [year, game.developer?.name].filter(Boolean).join(' · ')
@@ -19,7 +20,7 @@ export function GameRow({ game, status, onAdd }: GameRowProps) {
 
   return (
     <div className="game-row">
-      <Link to={`/game/${game.id}`} className="game-row__main">
+      <Link to={`/game/${game.id}`} className="game-row__main" onClick={onNavigate}>
         <div className="game-row__cover">
           {src ? <img src={src} alt="" loading="lazy" /> : <span className="game-row__noart" />}
         </div>

@@ -13,6 +13,7 @@ public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
     private readonly ITokenService _tokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
     private readonly IEmailSender _emailSender;
     private readonly EmailSettings _emailSettings;
     private readonly ILogger<AuthService> _logger;
@@ -21,12 +22,14 @@ public class AuthService : IAuthService
     public AuthService(
         IUserService pUserService,
         ITokenService pTokenService,
+        IRefreshTokenService pRefreshTokenService,
         IEmailSender pEmailSender,
         IOptions<EmailSettings> pEmailSettings,
         ILogger<AuthService> pLogger)
     {
         _userService = pUserService;
         _tokenService = pTokenService;
+        _refreshTokenService = pRefreshTokenService;
         _emailSender = pEmailSender;
         _emailSettings = pEmailSettings.Value;
         _logger = pLogger;
@@ -78,8 +81,31 @@ public class AuthService : IAuthService
         if (!xUser.EmailConfirmed)
             throw new EmailNotVerifiedException("Please verify your email before signing in.");
 
-        var xReturn = _tokenService.GenerateToken(xUser);
+        var xReturn = await IssueTokensAsync(xUser);
         return xReturn;
+    }
+
+    public async Task<AuthResponse> RefreshAsync(RefreshRequest pRequest)
+    {
+        var xToken = await _refreshTokenService.GetActiveAsync(pRequest.RefreshToken);
+        if (xToken == null)
+            throw new InvalidOperationException("Invalid or expired refresh token.");
+
+        await _refreshTokenService.RevokeAsync(xToken);
+
+        var xUser = await _userService.GetByIdAsync(xToken.UserId);
+        if (xUser == null)
+            throw new InvalidOperationException("Account not found.");
+
+        var xReturn = await IssueTokensAsync(xUser);
+        return xReturn;
+    }
+
+    public async Task RevokeAsync(RefreshRequest pRequest)
+    {
+        var xToken = await _refreshTokenService.GetActiveAsync(pRequest.RefreshToken);
+        if (xToken != null)
+            await _refreshTokenService.RevokeAsync(xToken);
     }
 
     public async Task<AuthResponse> VerifyEmailAsync(string pToken)
@@ -96,7 +122,7 @@ public class AuthService : IAuthService
         xUser.EmailVerificationTokenExpiresAt = null;
         await _userService.UpdateAsync(xUser);
 
-        var xReturn = _tokenService.GenerateToken(xUser);
+        var xReturn = await IssueTokensAsync(xUser);
         return xReturn;
     }
 
@@ -125,6 +151,18 @@ public class AuthService : IAuthService
 
         xUser.PasswordHash = _passwordHasher.HashPassword(xUser, pRequest.NewPassword);
         await _userService.UpdateAsync(xUser);
+    }
+
+    private async Task<AuthResponse> IssueTokensAsync(User pUser)
+    {
+        var xResponse = _tokenService.GenerateToken(pUser);
+        var xRefreshToken = await _refreshTokenService.IssueAsync(pUser.Id);
+
+        xResponse.RefreshToken = xRefreshToken.Token;
+        xResponse.RefreshTokenExpiresAt = xRefreshToken.ExpiresAt;
+
+        var xReturn = xResponse;
+        return xReturn;
     }
 
     private async Task SendVerificationAsync(User pUser)

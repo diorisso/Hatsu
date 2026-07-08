@@ -1,8 +1,10 @@
 .app {
+  --topbar-h: 70px;
   min-height: 100svh;
   background: var(--bg);
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 
 .topbar {
@@ -13,10 +15,16 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 14px clamp(20px, 5vw, 48px);
+  padding: 14px clamp(10px, 2vw, 18px);
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+body.topbar-over-banner .topbar {
+  background: color-mix(in srgb, var(--bg) 22%, transparent);
+  border-bottom-color: transparent;
 }
 
 .topbar .wordmark {
@@ -26,63 +34,30 @@
   text-decoration: none;
 }
 
-.searchbar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  order: 1;
-  flex: 0 1 340px;
-  max-width: 340px;
-  margin-left: auto;
-  color: var(--text-faint);
-}
-
-.searchbar svg {
-  position: absolute;
-  left: 13px;
-  pointer-events: none;
-}
-
-.searchbar__input {
-  width: 100%;
-  padding: 10px 14px 10px 38px;
-  font-size: 0.9rem;
-  color: var(--text);
-  background: var(--field);
-  border: 1px solid var(--field-border);
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   border-radius: 11px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
-.searchbar__input::placeholder {
-  color: var(--text-faint);
-}
-
-.searchbar__input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--ring);
+.icon-btn:hover {
+  border-color: var(--field-border);
+  transform: translateY(-1px);
 }
 
 .topbar__actions {
   display: flex;
   align-items: center;
   gap: 10px;
-  order: 2;
+  margin-left: auto;
   flex-shrink: 0;
-}
-
-@media (max-width: 600px) {
-  .topbar__actions {
-    margin-left: auto;
-  }
-
-  .searchbar {
-    order: 3;
-    flex: 1 1 100%;
-    max-width: none;
-    margin-left: 0;
-  }
 }
 
 .ghost-btn {
@@ -105,9 +80,9 @@
 /* ---- Page primitives shared across routes ---- */
 .page {
   width: 100%;
-  max-width: 1080px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 56px) clamp(20px, 5vw, 48px) 80px;
+  padding: clamp(28px, 5vw, 56px) clamp(10px, 2vw, 18px) 80px;
 }
 
 .page__head {

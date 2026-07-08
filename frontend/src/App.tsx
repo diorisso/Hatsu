@@ -4,7 +4,6 @@ import { AppLayout } from './components/AppLayout'
 import { AuthPage } from './auth/AuthPage'
 import { VerifyPage } from './auth/VerifyPage'
 import { LibraryPage } from './library/LibraryPage'
-import { SearchPage } from './search/SearchPage'
 import { GamePage } from './game/GamePage'
 import { SettingsPage } from './settings/SettingsPage'
 import { ProfilePage } from './profile/ProfilePage'
@@ -33,9 +32,9 @@ export default function App() {
         }
       >
         <Route path="/" element={<LibraryPage />} />
-        <Route path="/search" element={<SearchPage />} />
         <Route path="/game/:id" element={<GamePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/u/:username" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

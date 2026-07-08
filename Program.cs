@@ -41,6 +41,9 @@ builder.Services.AddScoped<IEntryRepository, EntryRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IPlatformRepository, PlatformRepository>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<IFollowRepository, FollowRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
@@ -50,6 +53,9 @@ builder.Services.AddScoped<IPlatformService, PlatformService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IFollowService, FollowService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));

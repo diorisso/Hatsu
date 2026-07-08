@@ -1,10 +1,11 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
-import { EntryStatus, type EntryResponse, type GameResponse } from '../api/types'
+import { EntryStatus, type EntryState, type GameResponse } from '../api/types'
 import { GAME_TYPE_LABEL, STATUS_COLOR, coverUrl } from '../api/labels'
 import { StatusSelect } from '../components/StatusSelect'
 import { RatingSelect } from '../components/RatingSelect'
+import { HeartIcon } from '../components/HeartIcon'
 import './game.css'
 
 export function GamePage() {
@@ -13,7 +14,7 @@ export function GamePage() {
   const gameId = Number(id)
 
   const [game, setGame] = useState<GameResponse | null>(null)
-  const [entry, setEntry] = useState<EntryResponse | null>(null)
+  const [entry, setEntry] = useState<EntryState | null>(null)
   const [phase, setPhase] = useState<'loading' | 'error' | 'ready'>('loading')
   const [loadError, setLoadError] = useState<string | null>(null)
 
@@ -21,24 +22,23 @@ export function GamePage() {
   const [rating, setRating] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [favBusy, setFavBusy] = useState(false)
 
   useEffect(() => {
     let active = true
 
     async function run() {
       try {
-        const [loadedGame, mine] = await Promise.all([
-          api.games.getById(gameId),
-          api.entries.mine(),
-        ])
+        const detail = await api.games.detail(gameId)
         if (!active) return
-        setGame(loadedGame)
-        const existing = mine.find((item) => item.gameId === gameId) ?? null
-        setEntry(existing)
-        if (existing) {
-          setStatus(existing.status)
-          setRating(existing.rating ?? null)
+        setGame(detail.game)
+        setEntry(detail.entry)
+        if (detail.entry) {
+          setStatus(detail.entry.status)
+          setRating(detail.entry.rating ?? null)
         }
+        setIsFavorite(detail.isFavorite)
         setPhase('ready')
       } catch (err) {
         if (!active) return
@@ -52,6 +52,21 @@ export function GamePage() {
       active = false
     }
   }, [gameId])
+
+  async function toggleFavorite() {
+    if (favBusy) return
+    const next = !isFavorite
+    setIsFavorite(next)
+    setFavBusy(true)
+    try {
+      if (next) await api.favorites.add(gameId)
+      else await api.favorites.remove(gameId)
+    } catch {
+      setIsFavorite(!next)
+    } finally {
+      setFavBusy(false)
+    }
+  }
 
   async function withBusy(action: () => Promise<void>) {
     setBusy(true)
@@ -163,6 +178,18 @@ export function GamePage() {
             }
           >
             {src ? <img src={src} alt={game.name} /> : <span className="game__noart" />}
+            <button
+              type="button"
+              className="game__fav"
+              data-active={isFavorite || undefined}
+              onClick={toggleFavorite}
+              disabled={favBusy}
+              aria-pressed={isFavorite}
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              title={isFavorite ? 'Favorited' : 'Favorite'}
+            >
+              <HeartIcon filled={isFavorite} size={20} />
+            </button>
           </div>
 
           <div className="track">

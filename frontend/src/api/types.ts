@@ -57,7 +57,6 @@ export interface GameResponse {
 
 export interface EntryResponse {
   id: number
-  userId: number
   gameId: number
   status: EntryStatus
   rating: number | null
@@ -66,9 +65,77 @@ export interface EntryResponse {
   updatedAt: string
 }
 
+export interface GameSummary {
+  id: number
+  type: GameType
+  name: string
+  coverUrl: string | null
+  releaseDate: string | null
+  developer: CompanySummary | null
+  genres: GenreSummary[]
+}
+
+export interface EntryViewModel {
+  id: number
+  status: EntryStatus
+  rating: number | null
+  notes: string | null
+  createdAt: string
+  updatedAt: string
+  game: GameSummary | null
+}
+
+export interface ProfileUser {
+  username: string
+  avatarUrl: string | null
+  bannerUrl: string | null
+  bio: string | null
+}
+
+export interface ProfileViewModel {
+  user: ProfileUser
+  isSelf: boolean
+  isFollowing: boolean
+  followerCount: number
+  followingCount: number
+  entries: EntryViewModel[]
+  favorites: GameSummary[]
+}
+
+export interface UserSummary {
+  username: string
+  avatarUrl: string | null
+  bio: string | null
+}
+
+export interface LibraryViewModel {
+  entries: EntryViewModel[]
+  favoriteGameIds: number[]
+}
+
+export interface EntryState {
+  id: number
+  status: EntryStatus
+  rating: number | null
+  notes: string | null
+}
+
+export interface GameDetailViewModel {
+  game: GameResponse
+  entry: EntryState | null
+  isFavorite: boolean
+}
+
+export interface SearchResult {
+  game: GameResponse
+  status: EntryStatus | null
+}
+
 export interface AuthResponse {
   token: string
   expiresAt: string
+  refreshToken: string
+  refreshTokenExpiresAt: string
 }
 
 export interface RegisterResponse {
@@ -77,10 +144,11 @@ export interface RegisterResponse {
 }
 
 export interface UserResponse {
-  id: number
   username: string
   email: string
   avatarUrl: string | null
+  bannerUrl: string | null
+  bio: string | null
 }
 
 export interface RegisterRequest {

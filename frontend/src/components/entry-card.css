@@ -23,6 +23,11 @@
   transition: box-shadow 0.2s var(--ease);
 }
 
+.entry-card:hover .more-btn {
+  opacity: 1;
+  transform: none;
+}
+
 .entry-card:hover .entry-card__cover {
   box-shadow:
     0 0 0 1.5px var(--status-color),
@@ -61,8 +66,28 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  height: 2.5em;
+}
+
+.entry-card__rating {
+  min-height: 14px;
 }
 
 .entry-card .rating-mini {
   margin-top: 2px;
+}
+
+.fav-badge {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+  background: rgba(23, 26, 33, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  pointer-events: none;
 }

@@ -7,14 +7,21 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { api, ApiError, getToken, setToken } from '../api/client'
-import type { UserResponse } from '../api/types'
+import {
+  api,
+  ApiError,
+  getRefreshToken,
+  getToken,
+  setTokens,
+  setUnauthorizedHandler,
+} from '../api/client'
+import type { AuthResponse, UserResponse } from '../api/types'
 
 interface SessionContextValue {
   token: string | null
   user: UserResponse | null
   isAuthenticated: boolean
-  signIn: (token: string) => void
+  signIn: (auth: AuthResponse) => void
   signOut: () => void
   updateUser: (user: UserResponse) => void
 }
@@ -25,13 +32,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(() => getToken())
   const [user, setUser] = useState<UserResponse | null>(null)
 
-  const signIn = useCallback((next: string) => {
-    setToken(next)
-    setTokenState(next)
+  const signIn = useCallback((auth: AuthResponse) => {
+    setTokens(auth)
+    setTokenState(auth.token)
   }, [])
 
   const signOut = useCallback(() => {
-    setToken(null)
+    const refreshToken = getRefreshToken()
+    if (refreshToken) api.auth.logout(refreshToken).catch(() => null)
+    setTokens(null)
     setTokenState(null)
     setUser(null)
   }, [])
@@ -39,6 +48,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const updateUser = useCallback((next: UserResponse) => {
     setUser(next)
   }, [])
+
+  useEffect(() => {
+    setUnauthorizedHandler(signOut)
+    return () => setUnauthorizedHandler(null)
+  }, [signOut])
 
   useEffect(() => {
     if (!token) {
