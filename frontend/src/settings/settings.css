@@ -81,7 +81,7 @@
   padding: 3px;
   gap: 2px;
   background: var(--seg-track);
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .settings__seg-btn {
@@ -91,7 +91,7 @@
   color: var(--text-muted);
   background: transparent;
   border: 0;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }

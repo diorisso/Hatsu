@@ -34,12 +34,43 @@ body.topbar-over-banner .topbar {
   text-decoration: none;
 }
 
+.topbar__nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbar__link {
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.topbar__link:hover {
+  color: var(--text);
+  background: var(--seg-track);
+}
+
+.topbar__link.active,
+.topbar__link[aria-current='page'] {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
 .icon-btn {
   display: inline-grid;
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: 7px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -67,7 +98,7 @@ body.topbar-over-banner .topbar {
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 11px;
+  border-radius: 7px;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }

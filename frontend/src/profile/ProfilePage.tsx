@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
 import type {
   EntryStatus,
@@ -581,6 +581,7 @@ function PeopleList({ state, emptyLabel }: { state: PeopleState; emptyLabel: str
 export function ProfilePage() {
   const { signOut } = useSession()
   const { username } = useParams()
+  const [searchParams] = useSearchParams()
   const [state, setState] = useState<LoadState>({ status: 'loading' })
   const [profileUser, setProfileUser] = useState<ProfileUser | null>(null)
   const [favorites, setFavorites] = useState<GameSummary[]>([])
@@ -590,6 +591,13 @@ export function ProfilePage() {
   const [following, setFollowing] = useState<PeopleState>({ status: 'idle' })
   const [tab, setTab] = useState<ProfileTab>('overview')
   const bannerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const xTab = searchParams.get('tab')
+    if (xTab === 'overview' || xTab === 'list' || xTab === 'followers' || xTab === 'following') {
+      setTab(xTab)
+    }
+  }, [searchParams])
 
   const followersRef = useRef(followers)
   followersRef.current = followers

@@ -108,9 +108,18 @@ public class IgdbService : IIgdbService
     {
         var xIgdbId = pIgdbGame.Id;
 
-        var xExisting = await _gameRepository.GetByIdAsync(xIgdbId);
+        var xExisting = await _gameRepository.GetByIdIncludingExcludedAsync(xIgdbId);
         if (xExisting != null)
+        {
+            if (xExisting.IsExcluded)
+            {
+                xExisting.IsExcluded = false;
+                await _gameRepository.UpdateAsync(xExisting);
+                await _gameRepository.SaveAsync();
+            }
+
             return xExisting;
+        }
 
         var xDeveloper = await ResolveCompanyAsync(pIgdbGame.InvolvedCompanies?.FirstOrDefault(p => p.Developer));
         var xPublisher = await ResolveCompanyAsync(pIgdbGame.InvolvedCompanies?.FirstOrDefault(p => p.Publisher));
@@ -162,9 +171,18 @@ public class IgdbService : IIgdbService
 
         var xIgdbId = (int)pInvolved.Company.Id;
 
-        var xExisting = await _companyRepository.GetByIdAsync(xIgdbId);
+        var xExisting = await _companyRepository.GetByIdIncludingExcludedAsync(xIgdbId);
         if (xExisting != null)
+        {
+            if (xExisting.IsExcluded)
+            {
+                xExisting.IsExcluded = false;
+                await _companyRepository.UpdateAsync(xExisting);
+                await _companyRepository.SaveAsync();
+            }
+
             return xExisting;
+        }
 
         var xCompany = new Company
         {
@@ -189,9 +207,16 @@ public class IgdbService : IIgdbService
         {
             var xIgdbId = (int)xIgdbPlatform.Id;
 
-            var xExisting = await _platformRepository.GetByIdAsync(xIgdbId);
+            var xExisting = await _platformRepository.GetByIdIncludingExcludedAsync(xIgdbId);
             if (xExisting != null)
             {
+                if (xExisting.IsExcluded)
+                {
+                    xExisting.IsExcluded = false;
+                    await _platformRepository.UpdateAsync(xExisting);
+                    await _platformRepository.SaveAsync();
+                }
+
                 xReturn.Add(xExisting);
                 continue;
             }
@@ -215,9 +240,16 @@ public class IgdbService : IIgdbService
         {
             var xIgdbId = (int)xIgdbGenre.Id;
 
-            var xExisting = await _genreRepository.GetByIdAsync(xIgdbId);
+            var xExisting = await _genreRepository.GetByIdIncludingExcludedAsync(xIgdbId);
             if (xExisting != null)
             {
+                if (xExisting.IsExcluded)
+                {
+                    xExisting.IsExcluded = false;
+                    await _genreRepository.UpdateAsync(xExisting);
+                    await _genreRepository.SaveAsync();
+                }
+
                 xReturn.Add(xExisting);
                 continue;
             }

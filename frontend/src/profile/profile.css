@@ -56,14 +56,14 @@
 .sk--name {
   width: min(240px, 55%);
   height: 30px;
-  border-radius: 9px;
+  border-radius: 6px;
 }
 
 .sk--counts {
   width: 180px;
   height: 14px;
   margin-top: 12px;
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 .profile__tabs--sk {
@@ -75,7 +75,7 @@
 .sk--tab {
   width: 84px;
   height: 18px;
-  border-radius: 7px;
+  border-radius: 5px;
 }
 
 .sk--stat {
@@ -87,7 +87,7 @@
   width: 150px;
   height: 18px;
   margin-bottom: 16px;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 
 .sk--fav {
@@ -97,12 +97,12 @@
 
 .sk--chart {
   height: 132px;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .sk--activity {
   height: 62px;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .profile__ident {
@@ -460,6 +460,22 @@
   .pf__side {
     position: static;
   }
+
+  .profile__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .profile__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .profile__tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
 }
 
 .profile-group {
@@ -659,7 +675,7 @@
 .hist__bar {
   width: 100%;
   min-height: 3px;
-  border-radius: 4px 4px 2px 2px;
+  border-radius: 3px 3px 2px 2px;
   background: var(--accent);
   transition: height 0.4s var(--ease);
 }
@@ -697,7 +713,7 @@
 
 .rank__track {
   height: 8px;
-  border-radius: 5px;
+  border-radius: 3px;
   background: var(--seg-track);
   overflow: hidden;
 }
@@ -705,7 +721,7 @@
 .rank__fill {
   display: block;
   height: 100%;
-  border-radius: 5px;
+  border-radius: 3px;
   background: var(--status-color, var(--accent));
   transition: width 0.4s var(--ease);
 }
@@ -784,7 +800,7 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 6px;
   background: color-mix(in srgb, var(--surface) 45%, var(--bg));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border) 60%, transparent);
   text-decoration: none;
@@ -804,7 +820,7 @@
   width: 40px;
   height: 54px;
   flex-shrink: 0;
-  border-radius: 7px;
+  border-radius: 5px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--accent), #171a21 92%);
 }
@@ -884,11 +900,12 @@
   overflow: hidden;
   background: var(--seg-track);
   border: 1px solid var(--border);
-  transition: transform 0.15s var(--ease);
+  transition: box-shadow 0.15s var(--ease), border-color 0.15s var(--ease);
 }
 
 .fav-cover:hover {
-  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 .fav-cover img {

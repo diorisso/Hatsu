@@ -68,7 +68,7 @@
   position: absolute;
   inset: 0;
   padding: 14px;
-  border-radius: 18px;
+  border-radius: 11px;
   background: linear-gradient(180deg, rgba(28, 32, 41, 0.98), rgba(20, 23, 30, 0.98));
   border: 1px solid rgba(254, 255, 254, 0.1);
   box-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.5);
@@ -85,7 +85,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  border-radius: 18px;
+  border-radius: 11px;
   background: linear-gradient(180deg, rgba(28, 32, 41, 0.55), rgba(20, 23, 30, 0.55));
   border: 1px solid rgba(254, 255, 254, 0.06);
 }
@@ -100,7 +100,7 @@
 
 .card__cover {
   height: 116px;
-  border-radius: 12px;
+  border-radius: 8px;
   background: linear-gradient(135deg, var(--cover, var(--accent)), #171a21 88%);
   position: relative;
   overflow: hidden;
@@ -315,7 +315,7 @@
   padding: 4px;
   margin-bottom: 20px;
   background: var(--seg-track);
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .seg__btn {
@@ -324,7 +324,7 @@
   border: 0;
   background: transparent;
   padding: 9px 12px;
-  border-radius: 9px;
+  border-radius: 6px;
   font-size: 0.86rem;
   font-weight: 500;
   color: var(--text-muted);
@@ -345,7 +345,7 @@
   height: calc(100% - 8px);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 6px;
   box-shadow: 0 2px 8px -4px rgba(0, 0, 0, 0.35);
   transition: transform 0.32s var(--ease);
 }
@@ -397,7 +397,7 @@
   color: var(--text);
   background: var(--field);
   border: 1px solid var(--field-border);
-  border-radius: 11px;
+  border-radius: 7px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -415,7 +415,7 @@
 .form__done {
   margin: 2px 0 14px;
   padding: 9px 12px;
-  border-radius: 9px;
+  border-radius: 6px;
   font-size: 0.84rem;
   background: var(--accent-soft);
 }
@@ -441,7 +441,7 @@
   place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: 7px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);

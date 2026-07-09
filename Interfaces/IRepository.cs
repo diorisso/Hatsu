@@ -4,6 +4,7 @@ public interface IRepository<TEntity, in TKey> where TEntity : class, ILogicExcl
 {
     IQueryable<TEntity> ListAll();
     Task<TEntity?> GetByIdAsync(TKey pId);
+    Task<TEntity?> GetByIdIncludingExcludedAsync(TKey pId);
     Task<TEntity> AddAsync(TEntity pEntity);
     Task<TEntity> UpdateAsync(TEntity pEntity);
     Task<TEntity> DeleteAsync(TKey pId);

@@ -215,7 +215,7 @@
 /* loading placeholders */
 .game__bar {
   height: 20px;
-  border-radius: 7px;
+  border-radius: 5px;
   margin-bottom: 14px;
   background: var(--seg-track);
   animation: bar-pulse 1.5s var(--ease) infinite;

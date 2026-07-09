@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AccountMenu } from './AccountMenu'
 import { SearchModal } from './SearchModal'
 import './layout.css'
@@ -22,6 +22,11 @@ function SearchTrigger({ onOpen }: { onOpen: () => void }) {
 
 export function AppLayout() {
   const [searchOpen, setSearchOpen] = useState(false)
+  const location = useLocation()
+
+  const onProfile = location.pathname === '/profile'
+  const isList = onProfile && new URLSearchParams(location.search).get('tab') === 'list'
+  const isProfile = onProfile && !isList
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -44,6 +49,25 @@ export function AppLayout() {
         <Link to="/" className="wordmark" aria-label="Hatsu home">
           Hatsu<i className="wordmark__dot" aria-hidden="true" />
         </Link>
+        <nav className="topbar__nav" aria-label="Primary">
+          <NavLink to="/" end className="topbar__link">
+            Home
+          </NavLink>
+          <Link
+            to="/profile"
+            className="topbar__link"
+            aria-current={isProfile ? 'page' : undefined}
+          >
+            Profile
+          </Link>
+          <Link
+            to="/profile?tab=list"
+            className="topbar__link"
+            aria-current={isList ? 'page' : undefined}
+          >
+            My List
+          </Link>
+        </nav>
         <div className="topbar__actions">
           <SearchTrigger onOpen={() => setSearchOpen(true)} />
           <AccountMenu />

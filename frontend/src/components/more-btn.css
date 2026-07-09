@@ -9,7 +9,7 @@
   height: 26px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   color: var(--text);
   background: color-mix(in srgb, #171a21 62%, transparent);
   backdrop-filter: blur(4px);

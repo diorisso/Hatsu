@@ -12,7 +12,7 @@
   color: var(--text);
   background: var(--field);
   border: 1px solid var(--field-border);
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -64,7 +64,7 @@
   padding: 6px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   animation: menusel-pop 0.16s var(--ease);
 }
@@ -90,7 +90,7 @@
   color: var(--text-muted);
   background: transparent;
   border: 0;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }

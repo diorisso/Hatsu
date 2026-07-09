@@ -29,6 +29,12 @@ public abstract class Repository<TEntity, TKey> : IRepository<TEntity, TKey> whe
         return xReturn;
     }
 
+    public async Task<TEntity?> GetByIdIncludingExcludedAsync(TKey pId)
+    {
+        var xReturn = await _dbSet.FirstOrDefaultAsync(p => p.Id.Equals(pId));
+        return xReturn;
+    }
+
     public async Task<TEntity> AddAsync(TEntity pEntity)
     {
         await _dbSet.AddAsync(pEntity);

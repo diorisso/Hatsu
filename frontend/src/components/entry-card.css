@@ -17,7 +17,7 @@
 .entry-card__cover {
   position: relative;
   aspect-ratio: 3 / 4;
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--accent), #171a21 92%);
   transition: box-shadow 0.2s var(--ease);

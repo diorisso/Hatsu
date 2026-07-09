@@ -7,7 +7,7 @@
 .skeleton--row {
   aspect-ratio: auto;
   height: 74px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .game-row {
@@ -17,7 +17,7 @@
   padding: 8px 10px 8px 8px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
@@ -41,7 +41,7 @@
   width: 42px;
   height: 56px;
   flex-shrink: 0;
-  border-radius: 7px;
+  border-radius: 5px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--accent), #171a21 92%);
 }
@@ -94,7 +94,7 @@
   color: var(--accent);
   background: var(--accent-soft);
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
   transition: color 0.2s, background 0.2s, transform 0.15s var(--ease);
 }
